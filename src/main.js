@@ -11,18 +11,6 @@ document.addEventListener("DOMContentLoaded", async (event) => {
   await init();
   bindFunctionToDOM();
 
-  // 50件ずつの配列として配列をネストする
-  function nestAry50(accum, current, index) {
-    if (index % 50 === 0) {
-      // あまりが０の時は配列を作成する
-      const newNest = [current];
-      accum.push(newNest);
-      return accum;
-    }
-    accum[accum.length - 1].push(current);
-    return accum;
-  }
-
   function bindFunctionToDOM() {
     const elemSearchButton = document.querySelector("[data-func='search");
 
@@ -45,7 +33,32 @@ document.addEventListener("DOMContentLoaded", async (event) => {
         await execVideosListRecursively(parsedVideoIds)
       ).flat();
 
+      // DOMを作成
       videoList.map((item) => createVideoList(item));
+
+      // 総合計時間を表示
+      const sumDuration = videoList.reduce((accum, item) => {
+        const duration = item.contentDetails.duration;
+        const ary = parseDurationStrToAry(duration);
+        const num = hmsArraytoInt(ary); // H, M, S表記を Sの一つにまとめる
+        return accum + num;
+      }, 0);
+
+      const displaySumDuration = replaceHMS(
+        intToHmsArray(sumDuration).join(""),
+      );
+
+      const style = "color: green;font-weight:bold;font-size:2em;";
+      console.log(
+        `総動画本数： %c${videoList.length} %c本`,
+        style,
+        "",
+      );
+      console.log(
+        `総再生時間： %c${displaySumDuration} %c(${sumDuration} 秒)`,
+        style,
+        "",
+      );
     });
   }
 });
@@ -95,7 +108,11 @@ function createVideoList(item) {
 
   createA(" ", item.snippet.title, elemMain, videoLink, "video-title");
   createLiSpan("公開日: ", item.snippet.publishedAt, elemMain);
-  createLiSpan("再生時間: ", parseTime(item.contentDetails.duration), elemMain);
+  createLiSpan(
+    "再生時間: ",
+    parseDurationForDisplay(item.contentDetails.duration),
+    elemMain,
+  );
   createLiSpan("視聴回数: ", `${item.statistics.viewCount} 回`, elemMisc);
   createLiSpan("👍: ", item.statistics.likeCount, elemMisc);
   createLiSpan("💬: ", item.statistics.commentCount, elemMisc);
@@ -107,13 +124,55 @@ function createVideoList(item) {
   elemFlexLeft.appendChild(li);
 }
 
-function parseTime(duration) {
-  const replaceHMS = (str) =>
-    str.replace(/H/, "時間").replace(/M/, "分").replace(/S/, "秒");
-  let text = "";
-  const ary = duration.replace(/^PT/, "").match(/[0-9]*[A-Z]/g);
-  if (ary.length >= 2) {
-    ary.pop();
+// 50件ずつの配列として配列をネストする
+function nestAry50(accum, current, index) {
+  if (index % 50 === 0) {
+    // あまりが０の時は配列を作成する
+    const newNest = [current];
+    accum.push(newNest);
+    return accum;
   }
+  accum[accum.length - 1].push(current);
+  return accum;
+}
+
+function hmsArraytoInt(hmsArray) {
+  let num = 0;
+  for (const str of hmsArray) {
+    if (str.includes("H")) {
+      str.replace(/H/, "");
+      num += parseInt(str) * 60 * 60;
+    } else if (str.includes("M")) {
+      str.replace(/M/, "");
+      num += parseInt(str) * 60;
+    } else if (str.includes("S")) {
+      str.replace(/S/, "");
+      num += parseInt(str);
+    }
+  }
+  return num;
+}
+
+function intToHmsArray(num) {
+  let h, m, s;
+  h = Math.floor(num / 60 / 60);
+  num -= h * 60 * 60;
+  m = Math.floor(num / 60);
+  num -= m * 60;
+  s = num;
+  return [`${h}H`, `${m}M`, `${s}S`];
+}
+
+function parseDurationForDisplay(str) {
+  const ary = parseDurationStrToAry(str);
+  if (ary.length >= 2) ary.pop();
   return replaceHMS(ary.join(""));
+}
+
+function parseDurationStrToAry(str) {
+  return str.replace(/^PT/, "").match(/[0-9]*[A-Z]/g);
+}
+
+function replaceHMS(str) {
+  return str.replace(/H/, "時間").replace(/M/, "分").replace(/S/, "秒");
 }
