@@ -29,24 +29,27 @@ body {
   min-width: 320px;
   min-height: 100vh;
 }
-
-img {
-  max-width: 100%;
+div, li, a, img {
   box-sizing: border-box;
 }
 
+img {
+  max-width: 100%;
+}
+
 h1 {
-  font-size: 3.2em;
+  font-size: 4.2em;
   line-height: 1.1;
 }
 
 #app {
-  max-width: 1280px;
+  max-width: 900px;
   margin: 0 auto;
-  padding: 2rem;
+  padding: 14px;
 }
 
 .view-area {
+  width: 100%;
   font-size: 12px;
   color: #ddd;
 }
@@ -56,6 +59,7 @@ li {
 }
 
 .list-outer {
+  width: 100%;
   display: flex;
   flex-direction: row-reverse;
   justify-content: flex-end;
@@ -67,13 +71,14 @@ li {
 .list-outer:hover {
   opacity: 0.8;
 }
-.list-outer > * {
+.list-outer > *:not(span) {
   margin: 12px;
   display: flex;
   flex-direction: column;
 }
 .list-outer > a {
-  max-width: 200px;
+  width: 180px;
+  min-width: 180px;
 }
 .list-outer > a:hover {
   opacity: 0.8;
@@ -81,6 +86,7 @@ li {
 
 .video-title {
   display: block;
+  padding: 10px 0;
   font-size: 20px;
   font-weight: bold;
 }
