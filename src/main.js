@@ -113,7 +113,7 @@ function createVideoList(item) {
     parseDurationForDisplay(item.contentDetails.duration),
     elemMain,
   );
-  createLiSpan("視聴回数: ", `${item.statistics.viewCount} 回`, elemMisc);
+  createLiSpan("視聴回数: ", `${item.statistics.viewCount} 回`, elemMain);
   createLiSpan("👍: ", item.statistics.likeCount, elemMisc);
   createLiSpan("💬: ", item.statistics.commentCount, elemMisc);
 
