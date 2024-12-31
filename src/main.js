@@ -4,7 +4,6 @@ import {
   execChannel,
   execPlaylistItemsRecursively,
   execVideosListRecursively,
-  ROKOCHAN,
 } from "./youtubeSnipet.js";
 
 // 外部script読み込み待機
@@ -14,7 +13,6 @@ document.addEventListener("DOMContentLoaded", async (event) => {
 
   // 50件ずつの配列として配列をネストする
   function nestAry50(accum, current, index) {
-    // console.log(`accum: ${accum}, index: ${index}, current:${current}`);
     if (index % 50 === 0) {
       // あまりが０の時は配列を作成する
       const newNest = [current];
@@ -26,16 +24,9 @@ document.addEventListener("DOMContentLoaded", async (event) => {
   }
 
   function bindFunctionToDOM() {
-    const elemVideosListRecursively = document.querySelector(
-      "[data-func='videoslistrecursively']"
-    );
-    const elemChannel = document.querySelector("[data-func='channel']");
-    const elemPlaylistItemsRecursively = document.querySelector(
-      "[data-func='playlistitemsrecursively']"
-    );
-    const elemTest = document.querySelector("[data-func='test");
+    const elemSearchButton = document.querySelector("[data-func='search");
 
-    elemTest.addEventListener("click", async () => {
+    elemSearchButton.addEventListener("click", async () => {
       const elemForm = document.querySelector("form");
       const text = elemForm.elements.channelid.value;
       if (!text) {
@@ -46,31 +37,13 @@ document.addEventListener("DOMContentLoaded", async (event) => {
       let res = await execChannel(text);
       const playlistId =
         res.result.items[0].contentDetails.relatedPlaylists.uploads;
-      console.log(`playlistId: ${playlistId}}`);
 
       res = await execPlaylistItemsRecursively(playlistId);
       const parsedVideoIds = res.reduce(nestAry50, []);
 
       const videoList = (await execVideosListRecursively(parsedVideoIds)).flat();
-      console.log(videoList)
 
       videoList.map(item => createVideoList(item))
-    });
-
-    elemVideosListRecursively.addEventListener("click", async () => {
-      console.log(await execVideosListRecursively());
-    });
-
-    elemChannel.addEventListener("click", async () => {
-      const list = await execChannel();
-      console.log(list);
-    });
-
-    elemPlaylistItemsRecursively.addEventListener("click", async () => {
-      const list = await execPlaylistItemsRecursively(ROKOCHAN.playlistId);
-      console.log(list);
-      const parsed = list.reduce(nestAry50, []);
-      console.log(`parsedVideoList: ${JSON.stringify(parsed)}`);
     });
   }
 });
