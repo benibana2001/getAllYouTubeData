@@ -72,7 +72,7 @@ li {
   display: flex;
   flex-direction: column;
 }
-.list-outer > a{
+.list-outer > a {
   max-width: 200px;
 }
 .list-outer > a:hover {

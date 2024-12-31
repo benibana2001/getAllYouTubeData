@@ -10,7 +10,7 @@ function loadClient() {
       },
       function (err) {
         console.error("Error loading GAPI client for API", err);
-      }
+      },
     );
 }
 
@@ -35,7 +35,7 @@ async function execVideosListRecursively(nestedAry) {
       options.id = ids;
       const res = await gapi.client.youtube.videos.list(options);
       return res.result.items;
-    })
+    }),
   );
   return newAry;
 }
@@ -56,7 +56,7 @@ async function execPlaylistItemsRecursively(playlistId, pageToken = "") {
     return temp;
   }
   return temp.concat(
-    await execPlaylistItemsRecursively(playlistId, res.result.nextPageToken)
+    await execPlaylistItemsRecursively(playlistId, res.result.nextPageToken),
   );
 }
 

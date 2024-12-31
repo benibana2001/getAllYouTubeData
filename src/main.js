@@ -41,16 +41,18 @@ document.addEventListener("DOMContentLoaded", async (event) => {
       res = await execPlaylistItemsRecursively(playlistId);
       const parsedVideoIds = res.reduce(nestAry50, []);
 
-      const videoList = (await execVideosListRecursively(parsedVideoIds)).flat();
+      const videoList = (
+        await execVideosListRecursively(parsedVideoIds)
+      ).flat();
 
-      videoList.map(item => createVideoList(item))
+      videoList.map((item) => createVideoList(item));
     });
   }
 });
 
-const createLiSpan = (tag, text, parent, liclass=null) => {
+const createLiSpan = (tag, text, parent, liclass = null) => {
   const li = document.createElement("li");
-  if(liclass) li.className = liclass;
+  if (liclass) li.className = liclass;
   const span = document.createElement("span");
   li.textContent = tag;
   span.textContent = text;
@@ -59,30 +61,30 @@ const createLiSpan = (tag, text, parent, liclass=null) => {
   return li;
 };
 
-const createA = (tag, text, parent, href, className=null) => {
-  const a = document.createElement('a')
-  if(className) a.className = className
-  a.href = href
-  a.target = '_blank';
-  const span = document.createElement('span')
+const createA = (tag, text, parent, href, className = null) => {
+  const a = document.createElement("a");
+  if (className) a.className = className;
+  a.href = href;
+  a.target = "_blank";
+  const span = document.createElement("span");
   a.textContent = tag;
   span.textContent = text;
-  a.appendChild(span)
-  parent.appendChild(a)
-  return a
-}
+  a.appendChild(span);
+  parent.appendChild(a);
+  return a;
+};
 
-function createVideoList  (item) {
+function createVideoList(item) {
   const elemTarget = document.querySelector(".view-area");
 
   const videoLink = `https://www.youtube.com/watch?v=${item.id}`;
 
-  const elemOuterList = createLiSpan("", "", elemTarget, 'list-outer');
+  const elemOuterList = createLiSpan("", "", elemTarget, "list-outer");
   const elemFlexRight = createLiSpan("", "", elemOuterList);
   const elemFlexLeft = createA("", "", elemOuterList, videoLink);
 
-  const elemMain = createLiSpan("", "", elemFlexRight)
-  const elemMisc = createLiSpan(":", "", elemFlexRight, "video-misc")
+  const elemMain = createLiSpan("", "", elemFlexRight);
+  const elemMisc = createLiSpan(":", "", elemFlexRight, "video-misc");
 
   createA(" ", item.snippet.title, elemMain, videoLink, "video-title");
   createLiSpan("公開日: ", item.snippet.publishedAt, elemMain);
@@ -91,9 +93,9 @@ function createVideoList  (item) {
   createLiSpan("👍: ", item.statistics.likeCount, elemMisc);
   createLiSpan("💬: ", item.statistics.commentCount, elemMisc);
 
-  const li = document.createElement('li')
-  const img = document.createElement('img')
-  img.src = item.snippet.thumbnails.high.url
-  li.appendChild(img)
-  elemFlexLeft.appendChild(li)
+  const li = document.createElement("li");
+  const img = document.createElement("img");
+  img.src = item.snippet.thumbnails.high.url;
+  li.appendChild(img);
+  elemFlexLeft.appendChild(li);
 }
