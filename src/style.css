@@ -29,7 +29,10 @@ body {
   min-width: 320px;
   min-height: 100vh;
 }
-div, li, a, img {
+div,
+li,
+a,
+img {
   box-sizing: border-box;
 }
 
@@ -50,7 +53,7 @@ h1 {
 
 .view-area {
   width: 100%;
-  font-size: 12px;
+  font-size: 14px;
   color: #ddd;
 }
 
@@ -99,11 +102,8 @@ li {
   display: flex;
   flex-direction: row;
 }
-.video-misc > * {
+.video-misc > *:not(:first-child) {
   margin-left: 5px;
-}
-.video-misc > *:first-child {
-  margin-left: inherit;
 }
 
 button {

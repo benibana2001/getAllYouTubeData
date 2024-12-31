@@ -84,12 +84,12 @@ function createVideoList(item) {
   const elemFlexLeft = createA("", "", elemOuterList, videoLink);
 
   const elemMain = createLiSpan("", "", elemFlexRight);
-  const elemMisc = createLiSpan(":", "", elemFlexRight, "video-misc");
+  const elemMisc = createLiSpan("", "", elemFlexRight, "video-misc");
 
   createA(" ", item.snippet.title, elemMain, videoLink, "video-title");
   createLiSpan("公開日: ", item.snippet.publishedAt, elemMain);
-  createLiSpan("再生時間: ", item.contentDetails.duration, elemMain);
-  createLiSpan("視聴回数: ", item.statistics.viewCount, elemMisc);
+  createLiSpan("再生時間: ", parseTime(item.contentDetails.duration), elemMain);
+  createLiSpan("視聴回数: ", `${item.statistics.viewCount} 回`, elemMisc);
   createLiSpan("👍: ", item.statistics.likeCount, elemMisc);
   createLiSpan("💬: ", item.statistics.commentCount, elemMisc);
 
@@ -98,4 +98,15 @@ function createVideoList(item) {
   img.src = item.snippet.thumbnails.high.url;
   li.appendChild(img);
   elemFlexLeft.appendChild(li);
+}
+
+function parseTime(duration) {
+  const replaceHMS = (str) =>
+    str.replace(/H/, "時間").replace(/M/, "分").replace(/S/, "秒");
+  let text = "";
+  const ary = duration.replace(/^PT/, "").match(/[0-9]*[A-Z]/g);
+  if (ary.length >= 2) {
+    ary.pop();
+  }
+  return replaceHMS(ary.join(""));
 }
