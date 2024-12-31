@@ -74,17 +74,24 @@ const createA = (tag, text, parent, href, className = null) => {
   return a;
 };
 
+const createLi = (parent, liclass = null) => {
+  const li = document.createElement("li");
+  if (liclass) li.className = liclass;
+  parent.appendChild(li);
+  return li;
+};
+
 function createVideoList(item) {
   const elemTarget = document.querySelector(".view-area");
 
   const videoLink = `https://www.youtube.com/watch?v=${item.id}`;
 
-  const elemOuterList = createLiSpan("", "", elemTarget, "list-outer");
-  const elemFlexRight = createLiSpan("", "", elemOuterList);
+  const elemOuterList = createLi(elemTarget, "list-outer");
+  const elemFlexRight = createLi(elemOuterList);
   const elemFlexLeft = createA("", "", elemOuterList, videoLink);
 
-  const elemMain = createLiSpan("", "", elemFlexRight);
-  const elemMisc = createLiSpan("", "", elemFlexRight, "video-misc");
+  const elemMain = createLi(elemFlexRight);
+  const elemMisc = createLi(elemFlexRight, "video-misc");
 
   createA(" ", item.snippet.title, elemMain, videoLink, "video-title");
   createLiSpan("公開日: ", item.snippet.publishedAt, elemMain);
