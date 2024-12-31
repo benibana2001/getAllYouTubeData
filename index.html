@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="jp">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>getYouTubeAllVideoByChannelId</title>
+    <script src="https://apis.google.com/js/api.js"></script>
+    <script type="module" src="/src/main.js"></script>
+  </head>
+
+  <body>
+    <div id="app">
+      <h2>debugButton</h2>
+      <form>
+        <input name="channelid" type="text" placeholder="チャンネルID">
+        UCarL7kAwPdJV7cOkml0ZBnA
+      </form>
+      <button data-func="test">test</button>
+      <button data-func="videoslistrecursively">videosListRecursively</button>
+      <button data-func="channel">execChannel</button>
+      <button data-func="playlistitemsrecursively">
+        execPlaylistItemsRecursively
+      </button>
+
+      <div class="view-area">
+        <h2>表示</h2>
+      </div>
+    </div>
+  </body>
+</html>
