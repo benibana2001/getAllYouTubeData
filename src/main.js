@@ -13,16 +13,27 @@ document.addEventListener("DOMContentLoaded", async (event) => {
 
   function bindFunctionToDOM() {
     const elemSearchButton = document.querySelector("[data-func='search");
+    const elemValidationMessage = document.querySelector(".validation-message");
 
     elemSearchButton.addEventListener("click", async () => {
       const elemForm = document.querySelector("form");
       const text = elemForm.elements.channelid.value;
-      if (!text) {
-        alert("Please Input Channel ID");
+
+      // videolistのIDを取得
+      let res;
+      try {
+        res = await execChannel(text);
+      } catch (err) {
+        console.error(err);
+        elemValidationMessage.textContent = err.message;
         return;
       }
-      // videolistのIDを取得
-      let res = await execChannel(text);
+
+      // エラーメッセージを削除
+      if (elemValidationMessage.textContent) {
+        elemValidationMessage.textContent = "";
+      }
+
       const playlistId =
         res.result.items[0].contentDetails.relatedPlaylists.uploads;
 
@@ -49,11 +60,7 @@ document.addEventListener("DOMContentLoaded", async (event) => {
       );
 
       const style = "color: green;font-weight:bold;font-size:2em;";
-      console.log(
-        `総動画本数： %c${videoList.length} %c本`,
-        style,
-        "",
-      );
+      console.log(`総動画本数： %c${videoList.length} %c本`, style, "");
       console.log(
         `総再生時間： %c${displaySumDuration} %c(${sumDuration} 秒)`,
         style,

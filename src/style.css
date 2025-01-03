@@ -57,6 +57,10 @@ h1 {
   color: #ddd;
 }
 
+.validation-message {
+  color: red;
+}
+
 li {
   list-style: none;
 }

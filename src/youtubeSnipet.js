@@ -15,10 +15,39 @@ function loadClient() {
 }
 
 async function execChannel(channelId) {
-  return gapi.client.youtube.channels.list({
+  if (!channelId) {
+    throw new Error(
+      "Channel ID Is not exist. Please Input YouTube Channel ID.",
+    );
+  }
+
+  if (!channelIdValidation(channelId)) {
+    throw new Error("Channel ID is not Correct.");
+  }
+
+  const res = await gapi.client.youtube.channels.list({
     part: ["snippet,contentDetails,statistics"],
     id: [channelId],
   });
+
+  if (res.status !== 200) {
+    console.log(res);
+    throw new Error("Network Error. Statuc Code is not 200.");
+  }
+
+  if (!res.result.items) {
+    console.log(res);
+    throw new Error("Requested Channel has no Video.");
+  }
+
+  console.log(res);
+  return res;
+
+  function channelIdValidation(id) {
+    if (id.slice(0, 2) !== "UC") return false;
+    if (id.length !== 24) return false;
+    return true;
+  }
 }
 
 // ネストされたvideoidを元に再起的にvideoの詳細を取得する
