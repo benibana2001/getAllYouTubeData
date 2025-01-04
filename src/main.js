@@ -39,33 +39,17 @@ document.addEventListener("DOMContentLoaded", async (event) => {
         // ユーザー操作ブロック
         document.dispatchEvent(new CustomEvent("busy", { detail: true }));
         res = await execChannel(text);
+
+        const playlistId = res.result.items[0].contentDetails.relatedPlaylists.uploads;
+        res = await execPlaylistItemsRecursively(playlistId);
+
+        const parsedVideoIds = res.reduce(nestAry50, []);
+        res = await execVideosListRecursively(parsedVideoIds);
+        
       } catch (err) {
         console.error(err);
         elemValidationMessage.textContent = err.message;
         // ユーザーブロック解除
-        document.dispatchEvent(new CustomEvent("busy", { detail: false }));
-        return;
-      }
-
-      const playlistId =
-        res.result.items[0].contentDetails.relatedPlaylists.uploads;
-
-      try {
-        res = await execPlaylistItemsRecursively(playlistId);
-      } catch {
-        console.error(err);
-        elemValidationMessage.textContent = err.message;
-        document.dispatchEvent(new CustomEvent("busy", { detail: false }));
-        return;
-      }
-
-      const parsedVideoIds = res.reduce(nestAry50, []);
-
-      try {
-        res = await execVideosListRecursively(parsedVideoIds);
-      } catch {
-        console.error(err);
-        elemValidationMessage.textContent = err.message;
         document.dispatchEvent(new CustomEvent("busy", { detail: false }));
         return;
       }
@@ -95,6 +79,7 @@ document.addEventListener("DOMContentLoaded", async (event) => {
         intToHmsArray(sumDuration).join(""),
       );
 
+      // PRINT DEBUG
       const style = "color: green;font-weight:bold;font-size:2em;";
       console.log(`総動画本数： %c${videoList.length} %c本`, style, "");
       console.log(
