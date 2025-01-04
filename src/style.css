@@ -1,3 +1,4 @@
+/* @import url("reset.css"); */
 @import url("micro-animation.css");
 @import url("form-decoration.css");
 
@@ -16,6 +17,10 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
+* {
+  box-sizing: border-box;
+  max-width: 100%;
+}
 a {
   font-weight: 500;
   color: #646cff;
@@ -28,28 +33,17 @@ a:hover {
 body {
   margin: 0;
   display: flex;
-  /* place-items: center; */
   min-width: 320px;
-  /* min-height: 100vh; */
-}
-div,
-li,
-a,
-img {
-  box-sizing: border-box;
-}
-
-img {
-  max-width: 100%;
 }
 
 #app {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
   max-width: 900px;
   min-height: 100vh;
   margin: 0 auto;
   padding: 14px;
-  display: flex;
-  flex-direction: column;
 }
 
 form {
@@ -71,14 +65,23 @@ form > h1 {
 }
 
 form > div {
+  /* max-width: 90vw; */
   display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
   gap: 1em;
 }
 
 form input[type="text"] {
   text-align: center;
   min-width: 280px;
-  font-size: 18px;
+  font-size: 1.1em;
+  background-color: transparent;
+  border: 0.1px solid #aaa;
+}
+
+form input:focus-visible{
+  outline: 0.1px slid #535bf2;
 }
 
 form[data-visible="hidden"] {
@@ -143,11 +146,15 @@ li {
 .list-outer > a:hover {
   opacity: 0.8;
 }
+.list-outer > li li+li {
+  margin-bottom: 0.4em;
+}
 
 .video-title {
   display: block;
   font-size: 16px;
   font-weight: bold;
+  margin-bottom: 0.6em;
 }
 .video-title:hover {
   opacity: 0.8;

@@ -27,8 +27,8 @@ document.addEventListener("DOMContentLoaded", async (event) => {
   });
 
   async function requestYouTubeAndCreateResultView() {
-    const videoList = await requestYoutubeAPIs() // 通信処理
-    createResultView(videoList) // 結果を元にDOMレンダリング
+    const videoList = await requestYoutubeAPIs(); // 通信処理
+    createResultView(videoList); // 結果を元にDOMレンダリング
   }
 
   async function requestYoutubeAPIs() {
@@ -67,7 +67,7 @@ document.addEventListener("DOMContentLoaded", async (event) => {
     return videoList;
   }
 
-  function createResultView(videoList){
+  function createResultView(videoList) {
     let totalVideoDuration = 0;
     let totalVideoCount = videoList.length;
     // Formエリアを非表示
@@ -90,10 +90,7 @@ document.addEventListener("DOMContentLoaded", async (event) => {
     // PRINT DEBUG
     const style = "color: green;font-weight:bold;font-size:2em;";
     console.log(`総動画本数： %c${totalVideoCount} %c本`, style, "");
-    console.log(
-      `総再生時間： %c${totalVideoDuration}`,
-      style,
-    );
+    console.log(`総再生時間： %c${totalVideoDuration}`, style);
   }
 });
 
