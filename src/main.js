@@ -11,19 +11,19 @@ document.addEventListener("DOMContentLoaded", async (event) => {
   await init();
   bindFunctionToDOM();
 
-  const elemBlocker = document.querySelector('.blocker')
-      console.log(typeof elemBlocker.dataset.busy)
-  document.addEventListener("busy", (event =>{
+  const elemBlocker = document.querySelector(".blocker");
+  console.log(typeof elemBlocker.dataset.busy);
+  document.addEventListener("busy", (event) => {
     if (event.detail) {
-      elemBlocker.dataset.busy = "true"; 
-      console.log('block user action');
-      console.log('show spinner')
+      elemBlocker.dataset.busy = "true";
+      console.log("block user action");
+      console.log("show spinner");
     } else {
-      elemBlocker.dataset.busy = "false"
-      console.log('unblock user action')
-      console.log('hide spinner')
+      elemBlocker.dataset.busy = "false";
+      console.log("unblock user action");
+      console.log("hide spinner");
     }
-  }))
+  });
 
   function bindFunctionToDOM() {
     const elemSearchButton = document.querySelector("[data-func='search");
@@ -37,15 +37,15 @@ document.addEventListener("DOMContentLoaded", async (event) => {
       let res;
       try {
         // ユーザー操作ブロック
-        document.dispatchEvent(new CustomEvent("busy", {detail: true}))
+        document.dispatchEvent(new CustomEvent("busy", { detail: true }));
         res = await execChannel(text);
       } catch (err) {
         console.error(err);
         elemValidationMessage.textContent = err.message;
         // ユーザーブロック解除
-        document.dispatchEvent(new CustomEvent("busy", {detail: false}))
+        document.dispatchEvent(new CustomEvent("busy", { detail: false }));
         return;
-      } 
+      }
 
       const playlistId =
         res.result.items[0].contentDetails.relatedPlaylists.uploads;
@@ -53,27 +53,27 @@ document.addEventListener("DOMContentLoaded", async (event) => {
       try {
         res = await execPlaylistItemsRecursively(playlistId);
       } catch {
-        console.error(err)
+        console.error(err);
         elemValidationMessage.textContent = err.message;
-        document.dispatchEvent(new CustomEvent("busy", {detail: false}))
+        document.dispatchEvent(new CustomEvent("busy", { detail: false }));
         return;
-       }
+      }
 
       const parsedVideoIds = res.reduce(nestAry50, []);
 
       try {
-        res = await execVideosListRecursively(parsedVideoIds)
+        res = await execVideosListRecursively(parsedVideoIds);
       } catch {
-        console.error(err)
+        console.error(err);
         elemValidationMessage.textContent = err.message;
-        document.dispatchEvent(new CustomEvent("busy", {detail: false}))
+        document.dispatchEvent(new CustomEvent("busy", { detail: false }));
         return;
       }
 
-      const videoList = res.flat()
+      const videoList = res.flat();
 
       //全通信処理成功
-      document.dispatchEvent(new CustomEvent("busy", {detail: false}))
+      document.dispatchEvent(new CustomEvent("busy", { detail: false }));
 
       // エラーメッセージを削除
       if (elemValidationMessage.textContent) {

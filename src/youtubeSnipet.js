@@ -70,8 +70,8 @@ async function execVideosListRecursively(nestedAry) {
 }
 
 async function execPlaylistItemsRecursively(playlistId, pageToken = "") {
-  if(!playlistId) {
-    throw new Error('Not Exist User Video List')
+  if (!playlistId) {
+    throw new Error("Not Exist User Video List");
   }
   console.log("execPlaylistItemRecursively");
   const options = {

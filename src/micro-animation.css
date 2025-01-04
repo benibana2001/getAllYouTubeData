@@ -15,7 +15,6 @@
   }
 }
 
-
 .lds-ring,
 .lds-ring div {
   box-sizing: border-box;
@@ -55,4 +54,3 @@
     transform: rotate(360deg);
   }
 }
-
