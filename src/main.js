@@ -44,6 +44,11 @@ document.addEventListener("DOMContentLoaded", async (event) => {
         await execVideosListRecursively(parsedVideoIds)
       ).flat();
 
+      // エラーメッセージを削除
+      if (elemValidationMessage.textContent) {
+        elemValidationMessage.textContent = "";
+      }
+
       // DOMを作成
       videoList.map((item) => createVideoList(item));
 
