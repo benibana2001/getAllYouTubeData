@@ -59,6 +59,9 @@ document.addEventListener("DOMContentLoaded", async (event) => {
       elemValidationMessage.textContent = "";
     }
 
+    // Formエリアを非表示
+    elemForm.dataset.visible = "hidden";
+
     // DOMを作成
     videoList.map((item) => createVideoList(item));
 

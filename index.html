@@ -11,10 +11,13 @@
   <body>
     <div id="app">
       <!-- Top View -->
-      <form>
+      <form data-visible="visible">
         <h1>GET ALL YOUTUBE VIDEOS FOR A SPECIFIC USER</h1>
-        <input name="channelid" type="text" placeholder="チャンネルID">
-        <input type="button" data-func="search" value="search">
+
+        <div>
+          <input name="channelid" type="text" placeholder="チャンネルID">
+          <input class="button-search" type="button" data-func="search" value="SEARCH">
+        </div>
 
         <p class="validation-message"></p>
       </form>
