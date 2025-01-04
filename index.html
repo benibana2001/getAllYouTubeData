@@ -10,21 +10,23 @@
 
   <body>
     <div id="app">
-      <h1>GET ALL YOUTUBE VIDEOS FOR A SPECIFIC USER</h1>
+      <!-- Top View -->
+      <form>
+        <h1>GET ALL YOUTUBE VIDEOS FOR A SPECIFIC USER</h1>
+        <input name="channelid" type="text" placeholder="チャンネルID">
+        <input type="button" data-func="search" value="search">
 
+        <p class="validation-message"></p>
+      </form>
+
+      <!-- Result View -->
+      <div class="view-area"> </div>
+
+      <!-- Blocker -->
       <div class="blocker" data-busy="false">
         <!-- Loading Spinner -->
         <div class="lds-ring"><div></div><div></div><div></div><div></div></div>
       </div>
-
-      <form>
-        <input name="channelid" type="text" placeholder="チャンネルID">
-        <input type="button" data-func="search" value="search">
-      </form>
-
-      <p class="validation-message"></p>
-
-      <div class="view-area"> </div>
     </div>
   </body>
 </html>
