@@ -15,7 +15,8 @@ document.addEventListener("DOMContentLoaded", async (event) => {
   const elemValidationMessage = document.querySelector(".validation-message");
   const elemBlocker = document.querySelector(".blocker");
 
-  elemSearchButton.addEventListener("click", requestYoutubeAPIs);
+  elemSearchButton.addEventListener("click", requestYouTubeAndCreateResultView);
+  // elemSearchButton.addEventListener("click", requestYoutubeAPIs);
 
   document.addEventListener("busy", (event) => {
     if (event.detail) {
@@ -24,6 +25,11 @@ document.addEventListener("DOMContentLoaded", async (event) => {
       elemBlocker.dataset.busy = "false";
     }
   });
+
+  async function requestYouTubeAndCreateResultView() {
+    const videoList = await requestYoutubeAPIs() // 通信処理
+    createResultView(videoList) // 結果を元にDOMレンダリング
+  }
 
   async function requestYoutubeAPIs() {
     const text = elemForm.elements.channelid.value;
@@ -58,30 +64,35 @@ document.addEventListener("DOMContentLoaded", async (event) => {
     if (elemValidationMessage.textContent) {
       elemValidationMessage.textContent = "";
     }
+    return videoList;
+  }
 
+  function createResultView(videoList){
+    let totalVideoDuration = 0;
+    let totalVideoCount = videoList.length;
     // Formエリアを非表示
     elemForm.dataset.visible = "hidden";
 
-    // DOMを作成
+    // 動画リストのDOMを作成
     videoList.map((item) => createVideoList(item));
 
-    // 総合計時間を表示
-    const sumDuration = videoList.reduce((accum, item) => {
+    // 総合計時間を計測
+    totalVideoDuration = videoList.reduce((accum, item) => {
       const duration = item.contentDetails.duration;
       const ary = parseDurationStrToAry(duration);
       const num = hmsArraytoInt(ary); // H, M, S表記を Sの一つにまとめる
       return accum + num;
     }, 0);
 
-    const displaySumDuration = replaceHMS(intToHmsArray(sumDuration).join(""));
+    // 総合計時間を自然言語にパース
+    totalVideoDuration = replaceHMS(intToHmsArray(totalVideoDuration).join(""));
 
     // PRINT DEBUG
     const style = "color: green;font-weight:bold;font-size:2em;";
-    console.log(`総動画本数： %c${videoList.length} %c本`, style, "");
+    console.log(`総動画本数： %c${totalVideoCount} %c本`, style, "");
     console.log(
-      `総再生時間： %c${displaySumDuration} %c(${sumDuration} 秒)`,
+      `総再生時間： %c${totalVideoDuration}`,
       style,
-      "",
     );
   }
 });
