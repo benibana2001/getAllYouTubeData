@@ -5,6 +5,9 @@ import {
   execPlaylistItemsRecursively,
   execVideosListRecursively,
 } from "./youtubeSnipet.js";
+import { DEBUG_VIDEO_LIST } from "./debug.js";
+
+let DEBUG = false;
 
 // 外部script読み込み待機
 document.addEventListener("DOMContentLoaded", async (event) => {
@@ -14,9 +17,15 @@ document.addEventListener("DOMContentLoaded", async (event) => {
   const elemSearchButton = document.querySelector("[data-func='search");
   const elemValidationMessage = document.querySelector(".validation-message");
   const elemBlocker = document.querySelector(".blocker");
+  const elemViewArea = document.querySelector(".view-area");
+  const elemBaseInfoArea = document.querySelector(".base-info-area")
+
+  if (DEBUG) {
+    const videoList = DEBUG_VIDEO_LIST;
+    createResultView(videoList); // 結果を元にDOMレンダリング
+  }
 
   elemSearchButton.addEventListener("click", requestYouTubeAndCreateResultView);
-  // elemSearchButton.addEventListener("click", requestYoutubeAPIs);
 
   document.addEventListener("busy", (event) => {
     if (event.detail) {
@@ -64,17 +73,26 @@ document.addEventListener("DOMContentLoaded", async (event) => {
     if (elemValidationMessage.textContent) {
       elemValidationMessage.textContent = "";
     }
+    console.log(videoList);
     return videoList;
   }
 
   function createResultView(videoList) {
+    let channelInfo = {
+      id: "",
+      name: "",
+      thumbnailURL: ""
+    }
     let totalVideoDuration = 0;
     let totalVideoCount = videoList.length;
+    let totalLikeCount = 0;
+    let totalCommentCount = 0;
+
     // Formエリアを非表示
     elemForm.dataset.visible = "hidden";
 
     // 動画リストのDOMを作成
-    videoList.map((item) => createVideoList(item));
+    videoList.map((item) => createVideoList(elemViewArea, item));
 
     // 総合計時間を計測
     totalVideoDuration = videoList.reduce((accum, item) => {
@@ -84,14 +102,49 @@ document.addEventListener("DOMContentLoaded", async (event) => {
       return accum + num;
     }, 0);
 
+    // 合計LIKE数を計測
+    totalLikeCount = videoList.reduce((accum, item) => {
+      const count = parseInt(item.statistics.likeCount)
+      console.log(accum , count)
+      return accum + count
+    }, 0)
+    // 合計コメント数を計測
+    totalCommentCount = videoList.reduce((accum, item) => {
+      let count = 0
+      if(item.statistics.commentCount) {
+        count = parseInt(item.statistics.commentCount)
+      }
+      console.log(accum , count)
+      if(!item.statistics.commentCount) {
+        console.log(item)
+      }
+      return accum +count
+    }, 0)
+
     // 総合計時間を自然言語にパース
     totalVideoDuration = replaceHMS(intToHmsArray(totalVideoDuration).join(""));
 
-    // PRINT DEBUG
-    const style = "color: green;font-weight:bold;font-size:2em;";
-    console.log(`総動画本数： %c${totalVideoCount} %c本`, style, "");
-    console.log(`総再生時間： %c${totalVideoDuration}`, style);
-  }
+    // 合計時間を表示
+    elemBaseInfoArea.appendChild( createCard("全動画 合計時間", totalVideoDuration))
+    // 総合 高評価数
+    elemBaseInfoArea.appendChild(createCard("合計 高評価数", totalLikeCount))
+    // 総合 コメント数
+    elemBaseInfoArea.appendChild(createCard("合計 コメント数", totalCommentCount))
+    // 全動画の数を表示
+    elemBaseInfoArea.appendChild( createCard("合計動画数", totalVideoCount ))
+
+    function createCard(title, duration) {
+      const div = document.createElement('div')
+      const h3 = document.createElement('h3')
+      const p =document.createElement('p')
+      div.className = 'card'
+      h3.textContent = title
+      p.textContent = duration
+      div.appendChild(h3)
+      div.appendChild(p)
+      return div
+    }
+}
 });
 
 const createLiSpan = (tag, text, parent, liclass = null) => {
@@ -125,12 +178,10 @@ const createLi = (parent, liclass = null) => {
   return li;
 };
 
-function createVideoList(item) {
-  const elemTarget = document.querySelector(".view-area");
-
+function createVideoList(parent, item) {
   const videoLink = `https://www.youtube.com/watch?v=${item.id}`;
 
-  const elemOuterList = createLi(elemTarget, "list-outer");
+  const elemOuterList = createLi(parent, "list-outer");
   const elemFlexRight = createLi(elemOuterList);
   const elemFlexLeft = createA("", "", elemOuterList, videoLink);
 
