@@ -91,9 +91,7 @@ async function fetchVideoResourcesWithVideoId(videoIdArray) {
   };
 
   // 50件ごとに一つの配列としてリクエストする
-  if (videoIdArray.length > 50) {
-    videoIdArray = videoIdArray.reduce(nestAry50, []);
-  }
+  videoIdArray = videoIdArray.reduce(nestAry50, []);
   const newAry = await Promise.all(
     videoIdArray.map(async (innerAry) => {
       // optionsを変えて取得

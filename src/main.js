@@ -38,133 +38,159 @@ document.addEventListener("DOMContentLoaded", async (event) => {
   });
 
   async function requestYouTubeAndCreateResultView() {
-    const videoList = await execAllFetchAndParseVideoResourcesList(); // 通信処理
-    createResultViewWithVideoList(videoList); // 結果を元にDOMレンダリング
-  }
+    const fetchedData = {
+      // すべての動画情報
+      videoResourcesArray: null,
+      // チャンネル情報
+      channelResources: {
+        id: "",
+        name: "",
+        thumbnailURL: "",
+        playlistId: "",
+      },
+    };
 
-  /**
-   * 動画情報が詰まったリストを返す
-   * @returns [[string]]
-   */
-  async function execAllFetchAndParseVideoResourcesList() {
-    // すべての動画情報
-    let videoResourcesArray = null;
-
-    const inputText = elemForm.elements.channelid.value;
+    const displayData = {
+      totalVideoDuration: 0,
+      totalVideoCount: 0,
+      totalLikeCount: 0,
+      totalCommentCount: 0,
+    };
 
     // ユーザー操作ブロック
     document.dispatchEvent(new CustomEvent("busy", { detail: true }));
+    await fetchAllResources(); // 通信処理
 
-    try {
-      // チャンネル情報を取得する
-      const channelResources =
-        await fetchChannelResourcesWithChannelId(inputText);
+    parseFetchedData();
 
-      // プレイリストのIDをパースする.
-      // このプレイリストには全体公開されているすべての動画IDが含まれると推察される
-      const playlistId =
-        channelResources[0].contentDetails.relatedPlaylists.uploads;
+    // ユーザーブロック解除
+    document.dispatchEvent(new CustomEvent("busy", { detail: false }));
 
-      // 動画のIDを取得する
-      const videoIdArray = await fetchAllVideoWithPlaylistId(playlistId);
+    createResultViewWithVideoList(fetchedData.videoResourcesArray); // 結果を元にDOMレンダリング
 
-      // 全動画情報を取得する
-      videoResourcesArray = await fetchVideoResourcesWithVideoId(videoIdArray);
-    } catch (err) {
-      console.error(err);
-      elemValidationMessage.textContent = err.message;
+    /**
+     * storeに保存するデータをfetchする
+     * @returns {void}
+     */
+    async function fetchAllResources() {
+      const inputText = elemForm.elements.channelid.value;
 
-      return;
-    } finally {
-      // ユーザーブロック解除
-      document.dispatchEvent(new CustomEvent("busy", { detail: false }));
-    }
+      try {
+        // チャンネル情報を取得する
+        let temp = await fetchChannelResourcesWithChannelId(inputText);
 
-    const videoList = videoResourcesArray.flat();
+        // プレイリストのIDをパースする.
+        // このプレイリストには全体公開されているすべての動画IDが含まれると推察される
+        fetchedData.channelResources.playlistId =
+          temp[0].contentDetails.relatedPlaylists.uploads;
 
-    // エラーメッセージを削除
-    if (elemValidationMessage.textContent) {
-      elemValidationMessage.textContent = "";
-    }
+        // 動画のIDを取得する
+        temp = await fetchAllVideoWithPlaylistId(
+          fetchedData.channelResources.playlistId,
+        );
 
-    return videoList;
-  }
+        // 全動画情報を取得する
+        temp = await fetchVideoResourcesWithVideoId(temp);
+        fetchedData.videoResourcesArray = temp.flat();
+      } catch (err) {
+        console.error(err);
+        elemValidationMessage.textContent = err.message;
 
-  /**
-   * 結果画面を作成する
-   * @param {[[string]]} videoList
-   */
-  function createResultViewWithVideoList(videoList) {
-    const channelInfo = {
-      id: "",
-      name: "",
-      thumbnailURL: "",
-    };
-    let totalVideoDuration = 0;
-    let totalVideoCount = videoList.length;
-    let totalLikeCount = 0;
-    let totalCommentCount = 0;
-
-    // Formエリアを非表示
-    elemForm.dataset.visible = "hidden";
-
-    // 動画リストのDOMを作成
-    videoList.map((item) => createVideoList(elemViewArea, item));
-
-    // 総合計時間を計測
-    totalVideoDuration = videoList.reduce((accum, item) => {
-      const duration = item.contentDetails.duration;
-      const ary = parseDurationStrToAry(duration);
-      const num = hmsArraytoInt(ary); // H, M, S表記を Sの一つにまとめる
-      return accum + num;
-    }, 0);
-
-    // 合計LIKE数を計測
-    totalLikeCount = videoList.reduce((accum, item) => {
-      const count = parseInt(item.statistics.likeCount);
-      return accum + count;
-    }, 0);
-
-    // 合計コメント数を計測
-    totalCommentCount = videoList.reduce((accum, item) => {
-      let count = 0;
-      if (item.statistics.commentCount) {
-        count = parseInt(item.statistics.commentCount);
+        return;
       }
 
-      if (!item.statistics.commentCount) {
-        console.log(item);
+      // エラーメッセージを削除
+      if (elemValidationMessage.textContent) {
+        elemValidationMessage.textContent = "";
       }
+    }
 
-      return accum + count;
-    }, 0);
+    // fetchしたデータをパースして保持
+    async function parseFetchedData() {
+      // 総合計時間を計測
+      displayData.totalVideoDuration = fetchedData.videoResourcesArray.reduce(
+        (accum, item) => {
+          const duration = item.contentDetails.duration;
+          const ary = parseDurationStrToAry(duration);
+          const num = hmsArraytoInt(ary); // H, M, S表記を Sの一つにまとめる
+          return accum + num;
+        },
+        0,
+      );
 
-    // 総合計時間を自然言語にパース
-    totalVideoDuration = replaceHMS(intToHmsArray(totalVideoDuration).join(""));
+      // 総合計時間を自然言語にパース
+      displayData.totalVideoDuration = replaceHMS(
+        intToHmsArray(displayData.totalVideoDuration).join(""),
+      );
 
-    // 合計時間を表示
-    elemBaseInfoArea.appendChild(
-      createCard("全動画 合計時間", totalVideoDuration),
-    );
-    // 総合 高評価数
-    elemBaseInfoArea.appendChild(createCard("合計 高評価数", totalLikeCount));
-    // 総合 コメント数
-    elemBaseInfoArea.appendChild(
-      createCard("合計 コメント数", totalCommentCount),
-    );
-    // 全動画の数を表示
-    elemBaseInfoArea.appendChild(createCard("合計動画数", totalVideoCount));
+      // 合計LIKE数を計測
+      displayData.totalLikeCount = fetchedData.videoResourcesArray.reduce(
+        (accum, item) => {
+          const count = parseInt(item.statistics.likeCount);
+          return accum + count;
+        },
+        0,
+      );
 
-    function createCard(title, duration) {
-      const div = document.createElement("div");
-      const h3 = document.createElement("h3");
-      const p = document.createElement("p");
-      div.className = "card";
-      h3.textContent = title;
-      p.textContent = duration;
-      div.appendChild(h3);
-      div.appendChild(p);
-      return div;
+      // 合計コメント数を計測
+      displayData.totalCommentCount = fetchedData.videoResourcesArray.reduce(
+        (accum, item) => {
+          let count = 0;
+          if (item.statistics.commentCount) {
+            count = parseInt(item.statistics.commentCount);
+          }
+
+          if (!item.statistics.commentCount) {
+            console.log(item);
+          }
+
+          return accum + count;
+        },
+        0,
+      );
+    }
+
+    /**
+     * 結果画面を作成する
+     * @param {[[string]]} videoList
+     */
+    function createResultViewWithVideoList(videoList) {
+      displayData.totalVideoCount = videoList.length;
+
+      // Formエリアを非表示
+      elemForm.dataset.visible = "hidden";
+
+      // 動画リストのDOMを作成
+      videoList.map((item) => createVideoList(elemViewArea, item));
+
+      // 合計時間を表示
+      elemBaseInfoArea.appendChild(
+        createCard("全動画 合計時間", displayData.totalVideoDuration),
+      );
+      // 総合 高評価数
+      elemBaseInfoArea.appendChild(
+        createCard("合計 高評価数", displayData.totalLikeCount),
+      );
+      // 総合 コメント数
+      elemBaseInfoArea.appendChild(
+        createCard("合計 コメント数", displayData.totalCommentCount),
+      );
+      // 全動画の数を表示
+      elemBaseInfoArea.appendChild(
+        createCard("合計動画数", displayData.totalVideoCount),
+      );
+
+      function createCard(title, duration) {
+        const div = document.createElement("div");
+        const h3 = document.createElement("h3");
+        const p = document.createElement("p");
+        div.className = "card";
+        h3.textContent = title;
+        p.textContent = duration;
+        div.appendChild(h3);
+        div.appendChild(p);
+        return div;
+      }
     }
   }
 });
