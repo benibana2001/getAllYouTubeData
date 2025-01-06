@@ -1,4 +1,4 @@
-export const DEBUG_VIDEO_LIST= [
+export const DEBUG_VIDEO_LIST = [
   {
     kind: "youtube#video",
     etag: "DEIrXX7AE8KA6sSB7Kfh8WECvHo",

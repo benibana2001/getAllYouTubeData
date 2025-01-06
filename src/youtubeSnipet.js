@@ -3,7 +3,7 @@ const API_KEY = "AIzaSyDe5lfxi4wDETz9EcfBTztdHMnErSRU7KM";
 /**
  * クライアントライブラリを読み込む
  * @returns void
- * 
+ *
  * https://github.com/google/google-api-javascript-client/blob/master/docs/start.md
  */
 function loadClient() {
@@ -35,9 +35,9 @@ async function init() {
 
 /**
  * チャンネル情報の取得
- * @param {string} channelId 
+ * @param {string} channelId
  * @returns {array} チャンネル情報
- * 
+ *
  * https://developers.google.com/youtube/v3/docs/channels?hl=ja
  */
 async function fetchChannelResourcesWithChannelId(channelId) {
@@ -81,7 +81,7 @@ async function fetchChannelResourcesWithChannelId(channelId) {
  * videoidを元に再帰的にvideoの詳細を取得する
  * @param {array[string]} videoIdArray
  * @returns {array}
- * 
+ *
  * https://developers.google.com/youtube/v3/docs/videos?hl=ja
  */
 async function fetchVideoResourcesWithVideoId(videoIdArray) {
@@ -91,8 +91,8 @@ async function fetchVideoResourcesWithVideoId(videoIdArray) {
   };
 
   // 50件ごとに一つの配列としてリクエストする
-  if(videoIdArray.length > 50) {
-    videoIdArray = videoIdArray.reduce(nestAry50, [])
+  if (videoIdArray.length > 50) {
+    videoIdArray = videoIdArray.reduce(nestAry50, []);
   }
   const newAry = await Promise.all(
     videoIdArray.map(async (innerAry) => {
@@ -121,10 +121,10 @@ async function fetchVideoResourcesWithVideoId(videoIdArray) {
 
 /**
  * 指定したプレイリストに含まれる全動画の動画IDを取得する
- * @param {string} playlistId 
- * @param {string|null} pageToken 
+ * @param {string} playlistId
+ * @param {string|null} pageToken
  * @returns {array[string]} 動画IDのリスト
- * 
+ *
  * https://developers.google.com/youtube/v3/docs/playlists?hl=ja
  */
 async function fetchAllVideoWithPlaylistId(playlistId, pageToken = "") {
@@ -154,5 +154,5 @@ export {
   init,
   fetchChannelResourcesWithChannelId,
   fetchVideoResourcesWithVideoId,
-  fetchAllVideoWithPlaylistId
+  fetchAllVideoWithPlaylistId,
 };
