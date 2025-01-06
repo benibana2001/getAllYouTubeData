@@ -68,7 +68,6 @@ form > h1 {
 }
 
 form > div {
-  /* max-width: 90vw; */
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
@@ -189,8 +188,6 @@ li {
   overflow-x: auto;
   gap: 1em;
   scrollbar-color: #ccc #222;
-  /* background-color:  var(--bg-color); */
-  /* filter: brightness(60%); */
 }
 .reel::-webkit-scrollbar {
   height: 0.4em;
@@ -205,4 +202,3 @@ li {
   font-weight: bold;
   color :#eee;
 }
-.card > div{}

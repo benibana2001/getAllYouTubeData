@@ -1,5 +1,11 @@
 const API_KEY = "AIzaSyDe5lfxi4wDETz9EcfBTztdHMnErSRU7KM";
 
+/**
+ * クライアントライブラリを読み込む
+ * @returns void
+ * 
+ * https://github.com/google/google-api-javascript-client/blob/master/docs/start.md
+ */
 function loadClient() {
   gapi.client.setApiKey(API_KEY);
   return gapi.client
@@ -14,7 +20,27 @@ function loadClient() {
     );
 }
 
-async function execChannel(channelId) {
+/**
+ * gapi初期化処理が終わるまで待機する
+ * @returns void
+ */
+async function init() {
+  return new Promise((resolve, reject) => {
+    gapi.load("client", async () => {
+      await loadClient();
+      resolve();
+    });
+  });
+}
+
+/**
+ * チャンネル情報の取得
+ * @param {string} channelId 
+ * @returns {array} チャンネル情報
+ * 
+ * https://developers.google.com/youtube/v3/docs/channels?hl=ja
+ */
+async function fetchChannelResourcesWithChannelId(channelId) {
   if (!channelId) {
     throw new Error(
       "Channel ID Is not exist. Please Input YouTube Channel ID.",
@@ -40,8 +66,9 @@ async function execChannel(channelId) {
     throw new Error("Requested Channel has no Video.");
   }
 
-  console.log(res);
-  return res;
+  const channelResource = res.result.items;
+
+  return channelResource;
 
   function channelIdValidation(id) {
     if (id.slice(0, 2) !== "UC") return false;
@@ -50,14 +77,25 @@ async function execChannel(channelId) {
   }
 }
 
-// ネストされたvideoidを元に再起的にvideoの詳細を取得する
-async function execVideosListRecursively(nestedAry) {
+/**
+ * videoidを元に再帰的にvideoの詳細を取得する
+ * @param {array[string]} videoIdArray
+ * @returns {array}
+ * 
+ * https://developers.google.com/youtube/v3/docs/videos?hl=ja
+ */
+async function fetchVideoResourcesWithVideoId(videoIdArray) {
   const options = {
     part: ["snippet,contentDetails,statistics"],
     id: [],
   };
+
+  // 50件ごとに一つの配列としてリクエストする
+  if(videoIdArray.length > 50) {
+    videoIdArray = videoIdArray.reduce(nestAry50, [])
+  }
   const newAry = await Promise.all(
-    nestedAry.map(async (innerAry) => {
+    videoIdArray.map(async (innerAry) => {
       // optionsを変えて取得
       const ids = [];
       ids.push(innerAry.join());
@@ -67,13 +105,32 @@ async function execVideosListRecursively(nestedAry) {
     }),
   );
   return newAry;
+
+  // 50件ずつの配列として配列をネストする
+  function nestAry50(accum, current, index) {
+    if (index % 50 === 0) {
+      // あまりが０の時は配列を作成する
+      const newNest = [current];
+      accum.push(newNest);
+      return accum;
+    }
+    accum[accum.length - 1].push(current);
+    return accum;
+  }
 }
 
-async function execPlaylistItemsRecursively(playlistId, pageToken = "") {
+/**
+ * 指定したプレイリストに含まれる全動画の動画IDを取得する
+ * @param {string} playlistId 
+ * @param {string|null} pageToken 
+ * @returns {array[string]} 動画IDのリスト
+ * 
+ * https://developers.google.com/youtube/v3/docs/playlists?hl=ja
+ */
+async function fetchAllVideoWithPlaylistId(playlistId, pageToken = "") {
   if (!playlistId) {
     throw new Error("Not Exist User Video List");
   }
-  console.log("execPlaylistItemRecursively");
   const options = {
     part: ["snippet,contentDetails"],
     maxResults: 50,
@@ -83,27 +140,19 @@ async function execPlaylistItemsRecursively(playlistId, pageToken = "") {
     options.pageToken = pageToken;
   }
   const res = await gapi.client.youtube.playlistItems.list(options);
+  // 動画IDのみを切り出してarrayを作る
   const temp = res.result.items.map((item) => item.contentDetails.videoId);
   if (!res.result.nextPageToken) {
     return temp;
   }
   return temp.concat(
-    await execPlaylistItemsRecursively(playlistId, res.result.nextPageToken),
+    await fetchAllVideoWithPlaylistId(playlistId, res.result.nextPageToken),
   );
-}
-
-async function init() {
-  return new Promise((resolve, reject) => {
-    gapi.load("client", async () => {
-      await loadClient();
-      resolve();
-    });
-  });
 }
 
 export {
   init,
-  execVideosListRecursively,
-  execChannel,
-  execPlaylistItemsRecursively,
+  fetchChannelResourcesWithChannelId,
+  fetchVideoResourcesWithVideoId,
+  fetchAllVideoWithPlaylistId
 };

@@ -1,9 +1,9 @@
 import "./style.css";
 import {
   init,
-  execChannel,
-  execPlaylistItemsRecursively,
-  execVideosListRecursively,
+  fetchChannelResourcesWithChannelId,
+  fetchVideoResourcesWithVideoId,
+  fetchAllVideoWithPlaylistId
 } from "./youtubeSnipet.js";
 import { DEBUG_VIDEO_LIST } from "./debug.js";
 
@@ -20,13 +20,15 @@ document.addEventListener("DOMContentLoaded", async (event) => {
   const elemViewArea = document.querySelector(".view-area");
   const elemBaseInfoArea = document.querySelector(".base-info-area")
 
+  // DOMのデバッグにはモックを使用する
   if (DEBUG) {
     const videoList = DEBUG_VIDEO_LIST;
-    createResultView(videoList); // 結果を元にDOMレンダリング
+    createResultViewWithVideoList(videoList); // 結果を元にDOMレンダリング
   }
 
   elemSearchButton.addEventListener("click", requestYouTubeAndCreateResultView);
 
+  // Loaderの表示
   document.addEventListener("busy", (event) => {
     if (event.detail) {
       elemBlocker.dataset.busy = "true";
@@ -36,49 +38,65 @@ document.addEventListener("DOMContentLoaded", async (event) => {
   });
 
   async function requestYouTubeAndCreateResultView() {
-    const videoList = await requestYoutubeAPIs(); // 通信処理
-    createResultView(videoList); // 結果を元にDOMレンダリング
+    const videoList = await execAllFetchAndParseVideoResourcesList(); // 通信処理
+    createResultViewWithVideoList(videoList); // 結果を元にDOMレンダリング
   }
 
-  async function requestYoutubeAPIs() {
-    const text = elemForm.elements.channelid.value;
+  /**
+   * 動画情報が詰まったリストを返す
+   * @returns [[string]]
+   */
+  async function execAllFetchAndParseVideoResourcesList() {
+    // すべての動画情報
+    let videoResourcesArray = null;
 
-    // videolistのIDを取得
-    let res;
+    const inputText = elemForm.elements.channelid.value;
+
+// ユーザー操作ブロック
+    document.dispatchEvent(new CustomEvent("busy", { detail: true }));
+
     try {
-      // ユーザー操作ブロック
-      document.dispatchEvent(new CustomEvent("busy", { detail: true }));
-      res = await execChannel(text);
+      // チャンネル情報を取得する
+      const channelResources = await fetchChannelResourcesWithChannelId(inputText);
 
+      // プレイリストのIDをパースする.
+      // このプレイリストには全体公開されているすべての動画IDが含まれると推察される
       const playlistId =
-        res.result.items[0].contentDetails.relatedPlaylists.uploads;
-      res = await execPlaylistItemsRecursively(playlistId);
+        channelResources[0].contentDetails.relatedPlaylists.uploads;
 
-      const parsedVideoIds = res.reduce(nestAry50, []);
-      res = await execVideosListRecursively(parsedVideoIds);
+      // 動画のIDを取得する
+      const videoIdArray = await fetchAllVideoWithPlaylistId(playlistId);
+
+      // 全動画情報を取得する
+      videoResourcesArray = await fetchVideoResourcesWithVideoId(videoIdArray);
+
     } catch (err) {
       console.error(err);
       elemValidationMessage.textContent = err.message;
+
+      return;
+
+    } finally {
       // ユーザーブロック解除
       document.dispatchEvent(new CustomEvent("busy", { detail: false }));
-      return;
     }
 
-    const videoList = res.flat();
-
-    //全通信処理成功
-    document.dispatchEvent(new CustomEvent("busy", { detail: false }));
+    const videoList = videoResourcesArray.flat();
 
     // エラーメッセージを削除
     if (elemValidationMessage.textContent) {
       elemValidationMessage.textContent = "";
     }
-    console.log(videoList);
+
     return videoList;
   }
 
-  function createResultView(videoList) {
-    let channelInfo = {
+  /**
+   * 結果画面を作成する
+   * @param {[[string]]} videoList 
+   */
+  function createResultViewWithVideoList(videoList) {
+    const channelInfo = {
       id: "",
       name: "",
       thumbnailURL: ""
@@ -105,19 +123,20 @@ document.addEventListener("DOMContentLoaded", async (event) => {
     // 合計LIKE数を計測
     totalLikeCount = videoList.reduce((accum, item) => {
       const count = parseInt(item.statistics.likeCount)
-      console.log(accum , count)
       return accum + count
     }, 0)
+
     // 合計コメント数を計測
     totalCommentCount = videoList.reduce((accum, item) => {
       let count = 0
       if(item.statistics.commentCount) {
         count = parseInt(item.statistics.commentCount)
       }
-      console.log(accum , count)
+
       if(!item.statistics.commentCount) {
         console.log(item)
       }
+
       return accum +count
     }, 0)
 
@@ -206,18 +225,28 @@ function createVideoList(parent, item) {
   elemFlexLeft.appendChild(li);
 }
 
-// 50件ずつの配列として配列をネストする
-function nestAry50(accum, current, index) {
-  if (index % 50 === 0) {
-    // あまりが０の時は配列を作成する
-    const newNest = [current];
-    accum.push(newNest);
-    return accum;
-  }
-  accum[accum.length - 1].push(current);
-  return accum;
+
+// Duration Parser
+/**
+ * 整数として与えられた秒数ををH, M, Sの時間表記に変更する
+ * @param {number} num 
+ * @returns {[string]}
+ */
+function intToHmsArray(num) {
+  let h, m, s;
+  h = Math.floor(num / 60 / 60);
+  num -= h * 60 * 60;
+  m = Math.floor(num / 60);
+  num -= m * 60;
+  s = num;
+  return [`${h}H`, `${m}M`, `${s}S`];
 }
 
+/**
+ *  H ,M,Sの時間表記を秒数に変換する
+ * @param {*} hmsArray 
+ * @returns {number}
+ */
 function hmsArraytoInt(hmsArray) {
   let num = 0;
   for (const str of hmsArray) {
@@ -235,26 +264,23 @@ function hmsArraytoInt(hmsArray) {
   return num;
 }
 
-function intToHmsArray(num) {
-  let h, m, s;
-  h = Math.floor(num / 60 / 60);
-  num -= h * 60 * 60;
-  m = Math.floor(num / 60);
-  num -= m * 60;
-  s = num;
-  return [`${h}H`, `${m}M`, `${s}S`];
-}
-
+/**
+ *  H ,M,Sの時間表記から「HH時間MM分SS秒」という表記に変える
+ * @param {string} str 
+ * @returns {string}
+ */
 function parseDurationForDisplay(str) {
   const ary = parseDurationStrToAry(str);
   if (ary.length >= 2) ary.pop();
   return replaceHMS(ary.join(""));
 }
 
+// 先頭の文字列"PT"をトリムし、残った"5H"や"30S"のような時間表記をスプリットして返す
 function parseDurationStrToAry(str) {
   return str.replace(/^PT/, "").match(/[0-9]*[A-Z]/g);
 }
 
+// 日本語表記に変更する
 function replaceHMS(str) {
   return str.replace(/H/, "時間").replace(/M/, "分").replace(/S/, "秒");
 }
