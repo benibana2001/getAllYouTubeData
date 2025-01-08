@@ -1,3 +1,6 @@
+/**************************************************************
+ * YouTUbeDataAPIv3にまつわる関数
+ *************************************************************/
 const API_KEY = "AIzaSyDe5lfxi4wDETz9EcfBTztdHMnErSRU7KM";
 
 /**
@@ -31,6 +34,41 @@ async function init() {
       resolve();
     });
   });
+}
+
+/**
+ * storeに保存するデータをfetchする
+ * @returns {void}
+ */
+async function fetchAllResources(inputText, store) {
+  const elemValidationMessage = document.querySelector(".validation-message");
+  try {
+    // 1. チャンネル情報を取得する
+    let temp = await fetchChannelResourcesWithChannelId(inputText);
+    store.fetchedData.channelResources.contentDetails = temp[0].contentDetails;
+    store.fetchedData.channelResources.snippet = temp[0].snippet;
+
+    // 2. 動画のIDを取得する
+    temp = await fetchAllVideoWithPlaylistId(
+      // このプレイリストには全体公開されているすべての動画IDが含まれると推察される
+      store.fetchedData.channelResources.contentDetails.relatedPlaylists
+        .uploads,
+    );
+
+    // 3. 全動画情報を取得する
+    temp = await fetchVideoResourcesWithVideoId(temp);
+    store.fetchedData.videoResources = temp.flat();
+  } catch (err) {
+    console.error(err);
+    elemValidationMessage.textContent = err.message;
+
+    return;
+  }
+
+  // エラーメッセージを削除
+  if (elemValidationMessage.textContent) {
+    elemValidationMessage.textContent = "";
+  }
 }
 
 /**
@@ -148,9 +186,4 @@ async function fetchAllVideoWithPlaylistId(playlistId, pageToken = "") {
   );
 }
 
-export {
-  init,
-  fetchChannelResourcesWithChannelId,
-  fetchVideoResourcesWithVideoId,
-  fetchAllVideoWithPlaylistId,
-};
+export { init, fetchAllResources };
