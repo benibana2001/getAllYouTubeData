@@ -5,7 +5,7 @@ import {
   fetchVideoResourcesWithVideoId,
   fetchAllVideoWithPlaylistId,
 } from "./youtubeSnipet.js";
-import { DEBUG_VIDEO_LIST } from "./debug.js";
+import { DEBUG_VIDEO_LIST, DEBUG_CHANNEL_RESOURCES } from "./debug.js";
 
 let DEBUG = false;
 
@@ -39,15 +39,100 @@ document.addEventListener("DOMContentLoaded", async (event) => {
 
   async function requestYouTubeAndCreateResultView() {
     const fetchedData = {
-      // すべての動画情報
-      videoResourcesArray: null,
       // チャンネル情報
       channelResources: {
-        id: "",
-        name: "",
-        thumbnailURL: "",
-        playlistId: "",
+        snippet: {
+          title: "",
+          description: "",
+          customUrl: "@XXXXXX",
+          publishedAt: "YYYY-MM-DDTHH:MM:SS.1234567",
+          thumbnails: {
+            default: {
+              url: "",
+              width: 88,
+              height: 88,
+            },
+            medium: {
+              url: "",
+              width: 240,
+              height: 240,
+            },
+            high: {
+              url: "",
+              width: 800,
+              height: 800,
+            },
+          },
+          defaultLanguage: "ja",
+          localized: {
+            title: "",
+            description: "",
+          },
+          country: "JP",
+        },
+        contentDetails: {
+          relatedPlaylists: {
+            likes: "",
+            uploads: "",
+          },
+        },
       },
+
+      // すべての動画情報
+      videoResources: [
+        {
+          kind: "youtube#playlistItem",
+          etag: "",
+          id: "",
+          snippet: {
+            publishedAt: "",
+            channelId: "",
+            title: "",
+            description: "",
+            thumbnails: {
+              default: {
+                url: "",
+                width: 120,
+                height: 90,
+              },
+              medium: {
+                url: "",
+                width: 320,
+                height: 180,
+              },
+              high: {
+                url: "",
+                width: 480,
+                height: 360,
+              },
+              standard: {
+                url: "",
+                width: 640,
+                height: 480,
+              },
+              maxres: {
+                url: "",
+                width: 1280,
+                height: 720,
+              },
+            },
+            channelTitle: "",
+            playlistId: "",
+            position: 50,
+            resourceId: {
+              kind: "youtube#video",
+              videoId: "",
+            },
+            videoOwnerChannelTitle: "",
+            videoOwnerChannelId: "",
+          },
+          contentDetails: {
+            videoId: "",
+            videoPublishedAt: "YYYY-MM-DDTHH:MM:SSZ",
+          },
+        },
+        {},
+      ],
     };
 
     const displayData = {
@@ -66,7 +151,7 @@ document.addEventListener("DOMContentLoaded", async (event) => {
     // ユーザーブロック解除
     document.dispatchEvent(new CustomEvent("busy", { detail: false }));
 
-    createResultViewWithVideoList(fetchedData.videoResourcesArray); // 結果を元にDOMレンダリング
+    createResultViewWithVideoList(fetchedData.videoResources); // 結果を元にDOMレンダリング
 
     /**
      * storeに保存するデータをfetchする
@@ -76,22 +161,20 @@ document.addEventListener("DOMContentLoaded", async (event) => {
       const inputText = elemForm.elements.channelid.value;
 
       try {
-        // チャンネル情報を取得する
+        // 1. チャンネル情報を取得する
         let temp = await fetchChannelResourcesWithChannelId(inputText);
+        fetchedData.channelResources.contentDetails = temp[0].contentDetails;
+        fetchedData.channelResources.snippet = temp[0].snippet;
 
-        // プレイリストのIDをパースする.
-        // このプレイリストには全体公開されているすべての動画IDが含まれると推察される
-        fetchedData.channelResources.playlistId =
-          temp[0].contentDetails.relatedPlaylists.uploads;
-
-        // 動画のIDを取得する
+        // 2. 動画のIDを取得する
         temp = await fetchAllVideoWithPlaylistId(
-          fetchedData.channelResources.playlistId,
+          // このプレイリストには全体公開されているすべての動画IDが含まれると推察される
+          fetchedData.channelResources.contentDetails.relatedPlaylists.uploads,
         );
 
-        // 全動画情報を取得する
+        // 3. 全動画情報を取得する
         temp = await fetchVideoResourcesWithVideoId(temp);
-        fetchedData.videoResourcesArray = temp.flat();
+        fetchedData.videoResources = temp.flat();
       } catch (err) {
         console.error(err);
         elemValidationMessage.textContent = err.message;
@@ -108,7 +191,7 @@ document.addEventListener("DOMContentLoaded", async (event) => {
     // fetchしたデータをパースして保持
     async function parseFetchedData() {
       // 総合計時間を計測
-      displayData.totalVideoDuration = fetchedData.videoResourcesArray.reduce(
+      displayData.totalVideoDuration = fetchedData.videoResources.reduce(
         (accum, item) => {
           const duration = item.contentDetails.duration;
           const ary = parseDurationStrToAry(duration);
@@ -124,7 +207,7 @@ document.addEventListener("DOMContentLoaded", async (event) => {
       );
 
       // 合計LIKE数を計測
-      displayData.totalLikeCount = fetchedData.videoResourcesArray.reduce(
+      displayData.totalLikeCount = fetchedData.videoResources.reduce(
         (accum, item) => {
           const count = parseInt(item.statistics.likeCount);
           return accum + count;
@@ -133,7 +216,7 @@ document.addEventListener("DOMContentLoaded", async (event) => {
       );
 
       // 合計コメント数を計測
-      displayData.totalCommentCount = fetchedData.videoResourcesArray.reduce(
+      displayData.totalCommentCount = fetchedData.videoResources.reduce(
         (accum, item) => {
           let count = 0;
           if (item.statistics.commentCount) {

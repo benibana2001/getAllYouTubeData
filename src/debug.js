@@ -6480,3 +6480,54 @@ export const DEBUG_VIDEO_LIST = [
     },
   },
 ];
+
+export const DEBUG_CHANNEL_RESOURCES = [
+  {
+    kind: "youtube#channel",
+    etag: "KUmLWoo4SY3s3f6JJGnkGn7SIPc",
+    id: "UCarL7kAwPdJV7cOkml0ZBnA",
+    snippet: {
+      title: "rokochan",
+      description:
+        "ども、rokochanです\n\n俺みたいに訳わからん配信してる腐れ野郎、他に、いますかっていねーか、はは\n\n今日の世の中の話題\nあの流行りの曲かっこいい　とか　あの服ほしい　とか\nま、それが普通ですわな\n\nかたや俺はdアニでアニメ見て、呟くんすわ\nIt’s a true world．アニメオタク？それ、誉め言葉ね。\n\n好きな音楽　もってけ！セーラーふく\n尊敬する絵描き　さいとうなおき先生（それ完全に間違ってますよ）\n\nなんつってる間に4時っすよ（笑）　あ～あ、お絵描き雑談の辛いとこね、これ\n\n\n",
+      customUrl: "@rokochan",
+      publishedAt: "2021-05-23T16:50:47.636422Z",
+      thumbnails: {
+        default: {
+          url: "https://yt3.ggpht.com/uT16fJ65l1nQD91sa_jxeTJdDIRk3kjrkbajqxy8SWRr6KmK-1Ggdr5OpS9JYR5EP8x-kfHi=s88-c-k-c0x00ffffff-no-rj",
+          width: 88,
+          height: 88,
+        },
+        medium: {
+          url: "https://yt3.ggpht.com/uT16fJ65l1nQD91sa_jxeTJdDIRk3kjrkbajqxy8SWRr6KmK-1Ggdr5OpS9JYR5EP8x-kfHi=s240-c-k-c0x00ffffff-no-rj",
+          width: 240,
+          height: 240,
+        },
+        high: {
+          url: "https://yt3.ggpht.com/uT16fJ65l1nQD91sa_jxeTJdDIRk3kjrkbajqxy8SWRr6KmK-1Ggdr5OpS9JYR5EP8x-kfHi=s800-c-k-c0x00ffffff-no-rj",
+          width: 800,
+          height: 800,
+        },
+      },
+      defaultLanguage: "ja",
+      localized: {
+        title: "rokochan",
+        description:
+          "ども、rokochanです\n\n俺みたいに訳わからん配信してる腐れ野郎、他に、いますかっていねーか、はは\n\n今日の世の中の話題\nあの流行りの曲かっこいい　とか　あの服ほしい　とか\nま、それが普通ですわな\n\nかたや俺はdアニでアニメ見て、呟くんすわ\nIt’s a true world．アニメオタク？それ、誉め言葉ね。\n\n好きな音楽　もってけ！セーラーふく\n尊敬する絵描き　さいとうなおき先生（それ完全に間違ってますよ）\n\nなんつってる間に4時っすよ（笑）　あ～あ、お絵描き雑談の辛いとこね、これ\n\n\n",
+      },
+      country: "JP",
+    },
+    contentDetails: {
+      relatedPlaylists: {
+        likes: "",
+        uploads: "UUarL7kAwPdJV7cOkml0ZBnA",
+      },
+    },
+    statistics: {
+      viewCount: "387229",
+      subscriberCount: "5770",
+      hiddenSubscriberCount: false,
+      videoCount: "101",
+    },
+  },
+];
