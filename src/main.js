@@ -22,6 +22,7 @@ document.addEventListener("DOMContentLoaded", async (event) => {
    * DEBUG
    ***************************************************/
   if (DEBUG) {
+    store.fetchedData.channelResources = DEBUG_CHANNEL_RESOURCES[0];
     store.fetchedData.videoResources = DEBUG_VIDEO_LIST;
     createResultViewWithVideoList(store); // 結果を元にDOMレンダリング
   }
@@ -40,6 +41,9 @@ async function requestYouTubeAndCreateResultView() {
   await fetchAllResources(elemForm.elements.channelid.value, store);
 
   parseFetchedData(store);
+
+  // Formエリアを非表示
+  elemForm.dataset.visible = "hidden";
 
   // ユーザーブロック解除
   document.dispatchEvent(new CustomEvent("busy", { detail: false }));

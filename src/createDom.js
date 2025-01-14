@@ -1,16 +1,24 @@
 /****************************************************
  * パースした値を元にDOMを作る
  ***************************************************/
-import {
-  hmsArraytoInt,
-  parseDurationForDisplay,
-  parseDurationStrToAry,
-  replaceHMS,
-} from "./utilFunctions";
+import { parseDurationForDisplay } from "./utilFunctions";
+import { Channel } from "./components/channle";
+import { createRoot } from "react-dom/client";
 
 const elemViewArea = document.querySelector(".view-area");
-const elemBaseInfoArea = document.querySelector(".base-info-area");
-const elemForm = document.querySelector("form");
+const elemReelArea01 = document.createElement("div");
+elemReelArea01.className = "reel reel-area";
+
+elemViewArea.append(elemReelArea01);
+
+/**********************************************************************************
+ ********************************************************************************* 
+                                 React Components 
+ ********************************************************************************* 
+ *********************************************************************************/
+
+const domNode = document.getElementById("react-root");
+const root = createRoot(domNode);
 
 /**
  * 結果画面を作成する
@@ -18,31 +26,23 @@ const elemForm = document.querySelector("form");
 function createResultViewWithVideoList(store) {
   store.displayData.totalVideoCount = store.fetchedData.videoResources.length;
 
-  // Formエリアを非表示
-  elemForm.dataset.visible = "hidden";
-
   // 動画リストのDOMを作成
   store.fetchedData.videoResources.map((item) =>
+    // elemViewAreaをparentとして追加
     createVideoList(elemViewArea, item),
   );
+  const channnelResources = store.fetchedData.channelResources;
 
-  // 合計時間を表示
-  elemBaseInfoArea.appendChild(
+  elemReelArea01.append(
     createCard("全動画 合計時間", store.displayData.totalVideoDuration),
-  );
-  // 総合 高評価数
-  elemBaseInfoArea.appendChild(
     createCard("合計 高評価数", store.displayData.totalLikeCount),
-  );
-  // 総合 コメント数
-  elemBaseInfoArea.appendChild(
     createCard("合計 コメント数", store.displayData.totalCommentCount),
-  );
-  // 全動画の数を表示
-  elemBaseInfoArea.appendChild(
     createCard("合計動画数", store.displayData.totalVideoCount),
   );
+
+  root.render(<Channel channelResources={channnelResources} />);
 }
+
 function createCard(title, duration) {
   const div = document.createElement("div");
   const h3 = document.createElement("h3");

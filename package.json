@@ -5,12 +5,17 @@
   "type": "module",
   "scripts": {
     "fmt": "prettier ./src --write",
-    "dev": "vite",
+    "dev": "vite --config ./vite.config.js",
     "build": "vite build",
     "preview": "vite preview"
   },
   "devDependencies": {
+    "@vitejs/plugin-react": "^4.3.4",
     "prettier": "3.4.2",
     "vite": "^6.0.5"
+  },
+  "dependencies": {
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0"
   }
 }

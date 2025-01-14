@@ -4,6 +4,9 @@
 
 :root {
   --bg-color: #242424;
+  --bg-card: rgba(255, 255, 255, 0.1);
+  --bg-channel: rgba(255, 255, 255, 0.1);
+  --hover-opacity: 0.8;
   font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.5;
   font-weight: 400;
@@ -101,7 +104,7 @@ form[data-visible="hidden"] {
 
 .blocker[data-busy="true"] {
   position: fixed;
-  opacity: 0.8;
+  opacity: var(--hover-opacity);
   top: 0;
   left: 0;
   z-index: 10;
@@ -112,9 +115,6 @@ form[data-visible="hidden"] {
   width: 100%;
   font-size: 10px;
   color: #ddd;
-}
-.view-area > * {
-  margin-bottom: 2em;
 }
 
 .validation-message {
@@ -136,7 +136,7 @@ li {
   transition: 0.1s linear all;
 }
 .list-outer:hover {
-  opacity: 0.8;
+  opacity: var(--hover-opacity);
 }
 .list-outer > * {
   margin: 12px;
@@ -149,7 +149,7 @@ li {
   min-width: 140px;
 }
 .list-outer > a:hover {
-  opacity: 0.8;
+  opacity: var(--hover-opacity);
 }
 .list-outer > li li + li {
   margin-bottom: 0.4em;
@@ -162,7 +162,7 @@ li {
   margin-bottom: 0.6em;
 }
 .video-title:hover {
-  opacity: 0.8;
+  opacity: var(--hover-opacity);
   text-decoration: underline;
 }
 
@@ -178,9 +178,23 @@ li {
   min-width: 180px;
   padding: 2.8em;
   border-radius: 0.6em;
-  background-color: rgba(255, 255, 255, 0.1);
+  background-color: var(--bg-card);
   margin-top: 2em;
   margin-bottom: 2em;
+}
+
+.channel {
+  display: flex;
+  flex-direction: row;
+  margin: 0 auto;
+  padding: 1em;
+  background-color: var(--bg-channel);
+}
+.channel:hover {
+  opacity: var(--hover-opacity);
+}
+.channel a:hover {
+  cursor: pointer;
 }
 
 .reel {
