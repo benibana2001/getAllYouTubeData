@@ -1,7 +1,7 @@
 /**************************************************************
  * YouTUbeDataAPIv3にまつわる関数
  *************************************************************/
-const API_KEY = "AIzaSyDe5lfxi4wDETz9EcfBTztdHMnErSRU7KM";
+const API_KEY = import.meta.env.VITE_API_KEY;
 
 /**
  * クライアントライブラリを読み込む
