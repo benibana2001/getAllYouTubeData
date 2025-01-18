@@ -1,6 +1,3 @@
-/****************************************************
- * fetchしたデータをパースして保存する
- ***************************************************/
 import {
   parseDurationStrToAry,
   hmsArraytoInt,
@@ -9,9 +6,13 @@ import {
 } from "./utilFunctions";
 
 /**
- * @param {*} store
+ ***************************************************
+                                                    
+             fetchしたデータをパースして保持           
+             @param {*} store                     
+                                                    
+ ***************************************************
  */
-// fetchしたデータをパースして保持
 async function parseFetchedData(store) {
   const displayData = store.displayData;
   const fetchedData = store.fetchedData;

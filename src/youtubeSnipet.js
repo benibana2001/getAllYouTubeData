@@ -1,14 +1,17 @@
 /**************************************************************
- * YouTUbeDataAPIv3にまつわる関数
+ ***********                              *********************
+ ##########* YouTUbeDataAPIv3にまつわる関数
+ **********                              **********************
  *************************************************************/
+
 const API_KEY = import.meta.env.VITE_API_KEY;
 
-/**
- * クライアントライブラリを読み込む
+/*########################################*
+ ** クライアントライブラリを読み込む
  * @returns void
  *
  * https://github.com/google/google-api-javascript-client/blob/master/docs/start.md
- */
+ ########################################*/
 function loadClient() {
   gapi.client.setApiKey(API_KEY);
   return gapi.client
@@ -23,10 +26,10 @@ function loadClient() {
     );
 }
 
-/**
+/******************************************
  * gapi初期化処理が終わるまで待機する
  * @returns void
- */
+ *****************************************/
 async function init() {
   return new Promise((resolve, reject) => {
     gapi.load("client", async () => {
@@ -36,19 +39,20 @@ async function init() {
   });
 }
 
-/**
- * storeに保存するデータをfetchする
- * @returns {void}
- */
+/**************************************************************
+ ***********                               ********************
+ *********** storeに保存するデータをfetchする
+ ***********  @returns {void}
+ ***********                              *********************
+ *************************************************************/
 async function fetchAllResources(inputText, store) {
   const elemValidationMessage = document.querySelector(".validation-message");
   try {
     // 1. チャンネル情報を取得する
     let temp = await fetchChannelResourcesWithChannelId(inputText);
-    store.fetchedData.channelResources.contentDetails = temp[0].contentDetails;
-    store.fetchedData.channelResources.snippet = temp[0].snippet;
+    store.fetchedData.channelResources = temp[0];
 
-    // 2. 動画のIDを取得する
+    // 2. 全動画のIDを取得する
     temp = await fetchAllVideoWithPlaylistId(
       // このプレイリストには全体公開されているすべての動画IDが含まれると推察される
       store.fetchedData.channelResources.contentDetails.relatedPlaylists

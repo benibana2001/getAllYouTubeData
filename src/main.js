@@ -6,7 +6,17 @@ import { store } from "./store.js";
 import { loader } from "./loader.js";
 import { parseFetchedData } from "./parse.js";
 
+/****************************************************
+                                           
+                       DEBUG                
+                                           
+ ***************************************************/
 let DEBUG = false;
+if (DEBUG) {
+  store.fetchedData.channelResources = DEBUG_CHANNEL_RESOURCES[0];
+  store.fetchedData.videoResources = DEBUG_VIDEO_LIST;
+  createResultViewWithVideoList(store); // 結果を元にDOMレンダリング
+}
 
 const elemForm = document.querySelector("form");
 const elemSearchButton = document.querySelector("[data-func='search");
@@ -18,21 +28,15 @@ document.addEventListener("DOMContentLoaded", async (event) => {
   // Loaderの初期化
   loader();
 
-  /****************************************************
-   * DEBUG
-   ***************************************************/
-  if (DEBUG) {
-    store.fetchedData.channelResources = DEBUG_CHANNEL_RESOURCES[0];
-    store.fetchedData.videoResources = DEBUG_VIDEO_LIST;
-    createResultViewWithVideoList(store); // 結果を元にDOMレンダリング
-  }
-
-  /****************************************************
-   * YouTUbeにリクエストを投げて画面を作る
-   ***************************************************/
+  // YouTUbeにリクエストを投げて画面を作る
   elemSearchButton.addEventListener("click", requestYouTubeAndCreateResultView);
 });
 
+/****************************************************
+  
+          * YouTUbeにリクエストを投げて画面を作る
+          
+***************************************************/
 async function requestYouTubeAndCreateResultView() {
   // ユーザー操作ブロック
   document.dispatchEvent(new CustomEvent("busy", { detail: true }));
@@ -40,6 +44,7 @@ async function requestYouTubeAndCreateResultView() {
   // 通信処理を行いstoreに保存
   await fetchAllResources(elemForm.elements.channelid.value, store);
 
+  // fetchしたデータをパースして保持
   parseFetchedData(store);
 
   // Formエリアを非表示
