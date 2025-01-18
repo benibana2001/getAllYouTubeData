@@ -3,6 +3,9 @@
  *************************************************************/
 const API_KEY = import.meta.env.VITE_API_KEY;
 
+console.log(import.meta.env)
+
+
 /**
  * クライアントライブラリを読み込む
  * @returns void
