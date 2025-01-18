@@ -33,6 +33,12 @@
   margin: 0;
 }
 
+body {
+  margin: 0;
+  display: flex;
+  min-width: 320px;
+}
+
 a {
   font-weight: 500;
   color: #646cff;
@@ -43,16 +49,14 @@ a {
   }
 }
 
-body {
-  margin: 0;
-  display: flex;
-  min-width: 320px;
-}
-
 h1 {
   font-size: 4.2em;
   line-height: 1.1;
   margin-bottom: 0.2em;
+}
+
+li {
+  list-style: none;
 }
 
 form {
@@ -135,10 +139,6 @@ form {
 
 .validation-message {
   color: red;
-}
-
-li {
-  list-style: none;
 }
 
 .list-outer {
