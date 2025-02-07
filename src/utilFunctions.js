@@ -4,7 +4,7 @@
 /**
  * 整数として与えられた秒数ををH, M, Sの時間表記に変更する
  * @param {number} num
- * @returns {[string]}
+ * @returns {string[]}
  */
 function intToHmsArray(num) {
   let h, m, s;
