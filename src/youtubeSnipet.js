@@ -78,7 +78,7 @@ async function fetchAllResources(inputText, store) {
 /**
  * チャンネル情報の取得
  * @param {string} channelId
- * @returns {array} チャンネル情報
+ * @returns {Promise} チャンネル情報
  *
  * https://developers.google.com/youtube/v3/docs/channels?hl=ja
  */
@@ -121,8 +121,8 @@ async function fetchChannelResourcesWithChannelId(channelId) {
 
 /**
  * videoidを元に再帰的にvideoの詳細を取得する
- * @param {array[string]} videoIdArray
- * @returns {array}
+ * @param {string[][]} videoIdArray
+ * @returns {Promise}
  *
  * https://developers.google.com/youtube/v3/docs/videos?hl=ja
  */
@@ -146,7 +146,15 @@ async function fetchVideoResourcesWithVideoId(videoIdArray) {
   );
   return newAry;
 
-  // 50件ずつの配列として配列をネストする
+  /**
+   * reducer
+   * @template T
+   * 50件ずつの配列として配列をネストする
+   * @param {T[][]} accum 
+   * @param {T} current 
+   * @param {number} index 
+   * @returns 
+   */
   function nestAry50(accum, current, index) {
     if (index % 50 === 0) {
       // あまりが０の時は配列を作成する
@@ -163,7 +171,7 @@ async function fetchVideoResourcesWithVideoId(videoIdArray) {
  * 指定したプレイリストに含まれる全動画の動画IDを取得する
  * @param {string} playlistId
  * @param {string|null} pageToken
- * @returns {array[string]} 動画IDのリスト
+ * @returns {Promise} 動画IDのリスト
  *
  * https://developers.google.com/youtube/v3/docs/playlists?hl=ja
  */
