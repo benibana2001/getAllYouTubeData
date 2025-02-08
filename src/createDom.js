@@ -4,6 +4,7 @@
 import { parseDurationForDisplay } from "./utilFunctions";
 import { Channel } from "./components/channle";
 import { createRoot } from "react-dom/client";
+import * as React from "react";
 
 const elemViewArea = document.querySelector(".view-area");
 const elemReelArea01 = document.createElement("div");

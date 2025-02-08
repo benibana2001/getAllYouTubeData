@@ -1,3 +1,5 @@
+import * as React from "react";
+
 const Channel = ({ channelResources }) => {
   const { snippet, statistics } = channelResources;
 
