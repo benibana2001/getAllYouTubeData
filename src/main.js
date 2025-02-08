@@ -42,7 +42,7 @@ async function requestYouTubeAndCreateResultView() {
   document.dispatchEvent(new CustomEvent("busy", { detail: true }));
 
   // 通信処理を行いstoreに保存
-  await fetchAllResources(elemForm.elements.channelid.value, store);
+  await fetchAllResources(elemForm.elements['channelid'].value, store);
 
   // fetchしたデータをパースして保持
   parseFetchedData(store);
