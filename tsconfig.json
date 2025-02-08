@@ -3,5 +3,6 @@
     "module": "esnext",
     "allowJs": true,
     "checkJs": true,
+    "lib": [ "es2015", "dom" ]
   }
 }
