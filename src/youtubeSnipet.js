@@ -150,10 +150,10 @@ async function fetchVideoResourcesWithVideoId(videoIdArray) {
    * reducer
    * @template T
    * 50件ずつの配列として配列をネストする
-   * @param {T[][]} accum 
-   * @param {T} current 
-   * @param {number} index 
-   * @returns 
+   * @param {T[][]} accum
+   * @param {T} current
+   * @param {number} index
+   * @returns
    */
   function nestAry50(accum, current, index) {
     if (index % 50 === 0) {

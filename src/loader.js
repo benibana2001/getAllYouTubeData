@@ -6,9 +6,10 @@ const loader = function () {
    * @type {HTMLElement}
    */
   const elemBlocker = document.querySelector(".blocker");
-  document.addEventListener("busy", 
+  document.addEventListener(
+    "busy",
     /**
-     * @param {CustomEvent} event 
+     * @param {CustomEvent} event
      */
     (event) => {
       if (event.detail) {
@@ -16,7 +17,7 @@ const loader = function () {
       } else {
         elemBlocker.dataset.busy = "false";
       }
-    }
+    },
   );
 };
 
