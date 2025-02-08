@@ -10,7 +10,8 @@
     "preview": "vite preview"
   },
   "devDependencies": {
-    "@types/gapi": "^0.0.47",
+    "@types/gapi.client.youtube-v3": "^0.0.4",
+    "@types/gapi.youtube": "^3.0.40",
     "@vitejs/plugin-react": "^4.3.4",
     "prettier": "3.4.2",
     "typescript": "^5.7.3",
