@@ -18,4 +18,11 @@ export default defineConfig({
     },
     react(),
   ],
+    optimizeDeps: {
+    esbuildOptions: {
+      loader: {
+        '.js': 'jsx',
+      },
+    },
+  }
 });
