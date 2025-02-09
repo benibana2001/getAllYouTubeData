@@ -1,14 +1,28 @@
 /****************************************************
- * 表示に使用するデータを定義・更新
+ * 表示に使用するデータ
  ***************************************************/
-const store = {
+const store: {
   /**
    * 取得した情報をそのまま保持する
    */
   fetchedData: {
+    channelResources: gapi.client.youtube.Channel;
     /**
      * チャンネルに関する情報を取得するAPIを叩いた結果を保持する
      */
+    videoResources: gapi.client.youtube.Video[];
+  };
+  /**
+   * 表示に使用する計算結果を保持
+   */
+  displayData: {
+    totalVideoDuration: number;
+    totalVideoCount: number;
+    totalLikeCount: number;
+    totalCommentCount: number;
+  };
+} = {
+  fetchedData: {
     channelResources: {
       snippet: {
         title: "",
@@ -88,19 +102,8 @@ const store = {
             },
           },
           channelTitle: "",
-          playlistId: "",
-          position: 50,
-          resourceId: {
-            kind: "youtube#video",
-            videoId: "",
-          },
-          videoOwnerChannelTitle: "",
-          videoOwnerChannelId: "",
         },
-        contentDetails: {
-          videoId: "",
-          videoPublishedAt: "YYYY-MM-DDTHH:MM:SSZ",
-        },
+        contentDetails: {},
       },
       {},
     ],

@@ -1,10 +1,10 @@
 import "./style.css";
-import { init, fetchAllResources } from "./youtubeSnipet.js";
+import { init, fetchAllResources } from "./youtubeSnipet";
 import { DEBUG_VIDEO_LIST, DEBUG_CHANNEL_RESOURCES } from "./debug.js";
-import { createResultViewWithVideoList } from "./createDom.js";
-import { store } from "./store.js";
-import { loader } from "./loader.js";
-import { parseFetchedData } from "./parse.js";
+import { createResultViewWithVideoList } from "./createDom";
+import { store } from "./store";
+import { loader } from "./loader";
+import { parseFetchedData } from "./parse";
 
 /****************************************************
                                            

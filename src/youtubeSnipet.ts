@@ -28,13 +28,12 @@ function loadClient() {
 
 /******************************************
  * gapi初期化処理が終わるまで待機する
- * @returns void
  *****************************************/
 async function init() {
   return new Promise((resolve, reject) => {
     gapi.load("client", async () => {
       await loadClient();
-      resolve();
+      resolve(() => {});
     });
   });
 }
@@ -179,13 +178,14 @@ async function fetchAllVideoWithPlaylistId(playlistId, pageToken = "") {
   if (!playlistId) {
     throw new Error("Not Exist User Video List");
   }
+
   const options = {
     part: ["snippet,contentDetails"],
     maxResults: 50,
     playlistId: playlistId,
   };
   if (pageToken) {
-    options.pageToken = pageToken;
+    options["pageToken"] = pageToken;
   }
   const res = await gapi.client.youtube.playlistItems.list(options);
   // 動画IDのみを切り出してarrayを作る
