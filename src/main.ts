@@ -3,7 +3,7 @@ import { init, fetchAllResources } from "./youtubeSnipet";
 import { DEBUG_VIDEO_LIST, DEBUG_CHANNEL_RESOURCES } from "./debug.js";
 import { createResultViewWithVideoList } from "./createDom";
 import { store } from "./store";
-import { loader } from "./loader";
+import { loaderInit, LoaderEvent } from "./loader";
 import { parseFetchedData } from "./parse";
 
 /****************************************************
@@ -26,7 +26,7 @@ document.addEventListener("DOMContentLoaded", async (event) => {
   await init();
 
   // Loaderの初期化
-  loader();
+  loaderInit();
 
   // YouTUbeにリクエストを投げて画面を作る
   elemSearchButton.addEventListener("click", requestYouTubeAndCreateResultView);
@@ -39,7 +39,12 @@ document.addEventListener("DOMContentLoaded", async (event) => {
 ***************************************************/
 async function requestYouTubeAndCreateResultView() {
   // ユーザー操作ブロック
-  document.dispatchEvent(new CustomEvent("busy", { detail: true }));
+  // document.dispatchEvent(new CustomEvent("busy", { detail: true }));
+  document.dispatchEvent(
+    new LoaderEvent("busy", {
+      detail: { type: "LoadingChannel", isUiLock: true },
+    })
+  );
 
   // 通信処理を行いstoreに保存
   await fetchAllResources(elemForm.elements["channelid"].value, store);
@@ -51,7 +56,11 @@ async function requestYouTubeAndCreateResultView() {
   elemForm.dataset.visible = "hidden";
 
   // ユーザーブロック解除
-  document.dispatchEvent(new CustomEvent("busy", { detail: false }));
+  document.dispatchEvent(
+    new LoaderEvent("busy", {
+      detail: { type: "LoadingChannel", isUiLock: false },
+    })
+  );
 
   // 結果を元にDOMレンダリング
   createResultViewWithVideoList(store);
