@@ -1,8 +1,9 @@
 type busyType = "LoadingChannel" | "LoadingVideoList";
 
-type busyStatus = {
-  type: busyType;
-  isUiLock: boolean;
-};
+type Events = {
+  busy: { type: busyType, isUiLock: boolean }
+}
 
-export { busyStatus, busyType };
+type BusyStatus = Events['busy']
+
+export { BusyStatus , busyType, Events };

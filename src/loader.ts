@@ -2,19 +2,19 @@
  * 通信処理の際に表示するローダー
  ***************************************************/
 
-import { busyStatus } from "./type";
+import { BusyStatus } from "./type";
+import { addCustomEvent } from "./utilFunctions";
 
-class LoaderEvent extends CustomEvent<busyStatus> {
-  constructor(type: string, eventInitDict?: CustomEventInit<busyStatus>) {
+class LoaderEvent extends CustomEvent<BusyStatus> {
+  constructor(type: string, eventInitDict?: CustomEventInit<BusyStatus>) {
     super(type, eventInitDict);
   }
 }
 
-
 const loaderInit = function () {
   const elemBlocker = document.querySelector(".blocker") as HTMLElement;
 
-  const listner: EventListener = (event: Event) => {
+  const listner = (event: Event) => {
     if(!isLoaderEvent(event)) return;
 
     if (event.detail.isUiLock) {
@@ -23,7 +23,8 @@ const loaderInit = function () {
       elemBlocker.dataset.isshow = "false";
     }
   };
-  document.addEventListener("busy", listner);
+
+  addCustomEvent("busy", listner)
 };
 
 function isLoaderEvent(event: Event): event is LoaderEvent {

@@ -1,6 +1,11 @@
-/****************************************************
- * 副作用のない関数を定義
- ***************************************************/
+import { Events } from "./type";
+
+function addCustomEvent< K extends keyof Events >(
+  key: K,
+  f: EventListenerOrEventListenerObject
+) { 
+  document.addEventListener(key, f)
+}
 /**
  * 整数として与えられた秒数ををH, M, Sの時間表記に変更する
  * @param {number} num
@@ -60,6 +65,7 @@ function replaceHMS(str) {
 }
 
 export {
+  addCustomEvent,
   intToHmsArray,
   hmsArraytoInt,
   parseDurationForDisplay,
