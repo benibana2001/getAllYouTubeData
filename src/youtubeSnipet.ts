@@ -44,7 +44,7 @@ async function init() {
  ***********  @returns void
  ***********                              *********************
  *************************************************************/
-async function fetchAllResources(inputText, store) {
+async function fetchAllResources(inputText: string, store) {
   const elemValidationMessage = document.querySelector(".validation-message");
   try {
     // 1. チャンネル情報を取得する

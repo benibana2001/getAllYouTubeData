@@ -19,6 +19,7 @@ if (DEBUG) {
 }
 
 const elemForm = document.querySelector("form");
+const elemInput = document.querySelector<HTMLInputElement>('input[name="channelid"]')
 const elemSearchButton = document.querySelector("[data-func='search");
 
 document.addEventListener("DOMContentLoaded", async (event) => {
@@ -29,6 +30,11 @@ document.addEventListener("DOMContentLoaded", async (event) => {
   loaderInit();
 
   // YouTUbeにリクエストを投げて画面を作る
+  if(!elemSearchButton) {
+    console.error('elemSearchButton was not detected')
+    return 
+  }
+
   elemSearchButton.addEventListener("click", requestYouTubeAndCreateResultView);
 });
 
@@ -38,8 +44,13 @@ document.addEventListener("DOMContentLoaded", async (event) => {
           
 ***************************************************/
 async function requestYouTubeAndCreateResultView() {
+
+  if(!elemInput || !elemForm) {
+    console.error('elemForm/input was not detedted')
+    return
+  }
+
   // ユーザー操作ブロック
-  // document.dispatchEvent(new CustomEvent("busy", { detail: true }));
   document.dispatchEvent(
     new LoaderEvent("busy", {
       detail: { type: "LoadingChannel", isUiLock: true },
@@ -47,7 +58,7 @@ async function requestYouTubeAndCreateResultView() {
   );
 
   // 通信処理を行いstoreに保存
-  await fetchAllResources(elemForm.elements["channelid"].value, store);
+  await fetchAllResources(elemInput.value, store);
 
   // fetchしたデータをパースして保持
   parseFetchedData(store);
