@@ -1,19 +1,21 @@
-/****************************************************
- * 表示に使用するデータ
- ***************************************************/
-const store: {
+type Store = {
   /**
    * 取得した情報をそのまま保持する
    */
   fetchedData: {
-    channelResources: gapi.client.youtube.Channel;
     /**
      * チャンネルに関する情報を取得するAPIを叩いた結果を保持する
+     */
+    channelResources: gapi.client.youtube.Channel;
+
+    /**
+     * 動画に関する情報を取得するAPIを叩いた結果を保持する
      */
     videoResources: gapi.client.youtube.Video[];
   };
   /**
    * 表示に使用する計算結果を保持
+   * fetchedDataをもとに算出した値を保持する
    */
   displayData: {
     totalVideoDuration: number;
@@ -21,7 +23,9 @@ const store: {
     totalLikeCount: number;
     totalCommentCount: number;
   };
-} = {
+};
+
+const store: Store = {
   fetchedData: {
     channelResources: {
       snippet: {
@@ -61,9 +65,6 @@ const store: {
       },
     },
 
-    /**
-     * 動画に関する情報を取得するAPIを叩いた結果を保持する
-     */
     videoResources: [
       {
         kind: "youtube#playlistItem",
@@ -109,9 +110,6 @@ const store: {
     ],
   },
 
-  /**
-   * 　fetchedDataをもとに算出した値を保持する
-   */
   displayData: {
     totalVideoDuration: 0,
     totalVideoCount: 0,
@@ -119,4 +117,4 @@ const store: {
     totalCommentCount: 0,
   },
 };
-export { store };
+export { store, Store };
