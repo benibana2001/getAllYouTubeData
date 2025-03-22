@@ -13,9 +13,10 @@ import {
                                                     
  ***************************************************
  */
-async function parseFetchedData(store: Store) {
-  const displayData = store.displayData;
-  const fetchedData = store.fetchedData;
+export default async function parseFetchedData(store: Store): Promise<Store> {
+  const newStore = { ...store }
+  const displayData = newStore.displayData;
+  const fetchedData = newStore.fetchedData;
 
   // 総合計時間を計測
   displayData.totalVideoDuration = fetchedData.videoResources.reduce(
@@ -37,7 +38,7 @@ async function parseFetchedData(store: Store) {
   displayData.totalLikeCount = fetchedData.videoResources.reduce(
     (accum, item) => {
       let count = 0;
-      if(item.statistics?.likeCount) {
+      if (item.statistics?.likeCount) {
         count = parseInt(item.statistics.likeCount)
       }
       return accum + count;
@@ -61,6 +62,6 @@ async function parseFetchedData(store: Store) {
     },
     0,
   );
-}
 
-export { parseFetchedData };
+  return newStore
+}

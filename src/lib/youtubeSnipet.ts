@@ -1,66 +1,29 @@
+import { Store, createDefaultStore } from "../store";
 /**************************************************************
- ***********                              *********************
- ##########* YouTUbeDataAPIv3にまつわる関数
- **********                              **********************
+ *********** YouTUbeDataAPIvを使用して3storeに保存するデータをfetchする
+ ***********  @returns store: Store
  *************************************************************/
-
-const API_KEY = import.meta.env.VITE_API_KEY;
-
-/*########################################*
- ** クライアントライブラリを読み込む
- * @returns void
- *
- * https://github.com/google/google-api-javascript-client/blob/master/docs/start.md
- ########################################*/
-function loadClient() {
-  gapi.client.setApiKey(API_KEY);
-  return gapi.client
-    .load("https://www.googleapis.com/discovery/v1/apis/youtube/v3/rest")
-    .then(
-      function () {
-        console.log("GAPI client loaded for API");
-      },
-      function (err) {
-        console.error("Error loading GAPI client for API", err);
-      },
-    );
-}
-
-/******************************************
- * gapi初期化処理が終わるまで待機する
- *****************************************/
-async function init() {
-  return new Promise((resolve, reject) => {
-    gapi.load("client", async () => {
-      await loadClient();
-      resolve(() => {});
-    });
-  });
-}
-
-/**************************************************************
- ***********                               ********************
- *********** storeに保存するデータをfetchする
- ***********  @returns void
- ***********                              *********************
- *************************************************************/
-async function fetchAllResources(inputText: string, store) {
+export default async function fetchAllResources(inputText: string): Promise<Store> {
+  const newStore = createDefaultStore();
   const elemValidationMessage = document.querySelector(".validation-message");
   try {
-    // 1. チャンネル情報を取得する
+    // 1. チャンネル情報を取得する TODO: name 'temp' is ambiguious
     let temp = await fetchChannelResourcesWithChannelId(inputText);
-    store.fetchedData.channelResources = temp[0];
+
+    newStore.fetchedData.channelResources = temp[0];
 
     // 2. 全動画のIDを取得する
     temp = await fetchAllVideoWithPlaylistId(
       // このプレイリストには全体公開されているすべての動画IDが含まれると推察される
-      store.fetchedData.channelResources.contentDetails.relatedPlaylists
+      newStore.fetchedData.channelResources.contentDetails.relatedPlaylists
         .uploads,
     );
 
     // 3. 全動画情報を取得する
     temp = await fetchVideoResourcesWithVideoId(temp);
-    store.fetchedData.videoResources = temp.flat();
+    newStore.fetchedData.videoResources = temp.flat();
+    return newStore;
+
   } catch (err) {
     console.error(err);
     elemValidationMessage.textContent = err.message;
@@ -198,4 +161,3 @@ async function fetchAllVideoWithPlaylistId(playlistId, pageToken = "") {
   );
 }
 
-export { init, fetchAllResources };

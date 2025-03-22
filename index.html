@@ -5,33 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>getAllYouTubeVideo</title>
     <script src="https://apis.google.com/js/api.js"></script>
-    <script type="module" src="/src/main.ts"></script>
+    <script type="module" src="/src/main.tsx"></script>
   </head>
 
   <body>
-    <div id="app">
-      <!-- Top View -->
-      <form data-visible="visible">
-        <h1>GET ALL YOUTUBE VIDEOS FOR A SPECIFIC USER</h1>
-
-        <div>
-          <input name="channelid" type="text" placeholder="チャンネルID">
-          <input class="button-search" type="button" data-func="search" value="SEARCH">
-        </div>
-
-        <p class="validation-message"></p>
-      </form>
-
-      <!-- Result View -->
-      <div class="view-area">
-        <div id="react-root"></div>
-      </div>
-
-      <!-- Blocker -->
-      <div class="blocker" data-isshow="false">
-        <!-- Loading Spinner -->
-        <div class="lds-ring"><div></div><div></div><div></div><div></div></div>
-      </div>
-    </div>
+    <div id="app"></div>
   </body>
 </html>

@@ -171,7 +171,7 @@ form {
     opacity: var(--hover-opacity);
   }
 
-  & > li li + li {
+  & > div div + div {
     margin-bottom: 0.4em;
   }
 }

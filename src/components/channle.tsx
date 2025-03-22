@@ -1,11 +1,10 @@
 import * as React from "react";
 
-const Channel = ({ channelResources }) => {
+export default function Channel({ channelResources }) {
   const { snippet, statistics } = channelResources;
 
   return (
     <div className="channel channel-are">
-      {/* <h2>チャンネル情報</h2> */}
       <div>
         <a>
           <img src={snippet.thumbnails.default.url} />
@@ -27,4 +26,3 @@ const Channel = ({ channelResources }) => {
   );
 };
 
-export { Channel };
