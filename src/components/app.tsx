@@ -58,12 +58,21 @@ export default function App() {
     setStore(storeclass.store)
   }
 
-  const sortStore = () => {
-    // LikeCountを比較する
-    const comparefunc = (a: gapi.client.youtube.Video, b: gapi.client.youtube.Video) => {
-      return (parseInt(a.statistics.likeCount) - parseInt(b.statistics.likeCount))
-    }
-    storeclass.sortVideoList(comparefunc)
+  const sortLikeAscend = () => {
+    storeclass.sortVideoList('likeAscend')
+    setStore(storeclass.store)
+  }
+  const sortLikeDecend = () => {
+    storeclass.sortVideoList('likeDecend')
+    setStore(storeclass.store)
+  }
+
+  const sortCommentCountAscend = () => {
+    storeclass.sortVideoList('commentAscend')
+    setStore(storeclass.store)
+  }
+  const sortCommentCountDescend = () => {
+    storeclass.sortVideoList('commentDescend')
     setStore(storeclass.store)
   }
 
@@ -93,10 +102,19 @@ export default function App() {
         </form>
       }
 
-      <button onClick={removeStore}>Close</button>
-      <button onClick={sortStore}>Sort</button>
-      <button onClick={() => { console.log(storeclass) }}>ConsoleStoreclass</button>
-      {hasStore && <Result store={store} />}
+      <div>
+        <button onClick={removeStore}>Close</button>
+      </div>
+      <div>
+        <button onClick={sortLikeAscend}>sortLikeAscend</button>
+        <button onClick={sortLikeDecend}>sortLikeDecend</button>
+        <button onClick={sortCommentCountAscend}>sortCommentAscend</button>
+        <button onClick={sortCommentCountDescend}>sortCommentCountDescend</button>
+      </div>
+      <div>
+        <button onClick={() => { console.log(storeclass) }}>ConsoleStoreclass</button>
+        {hasStore && <Result store={store} />}
+      </div>
 
 
       <div className="blocker" data-isshow="false">

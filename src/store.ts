@@ -46,6 +46,34 @@ const createDefaultStore = () => {
   }
 }
 
+type CompareFuncName = 'likeAscend' | 'likeDecend' | 'commentAscend' | 'commentDescend'
+
+const compareFunc = (name: CompareFuncName) => {
+  switch (name) {
+    case 'likeAscend': {
+      return (a: gapi.client.youtube.Video, b: gapi.client.youtube.Video) => {
+        return (parseInt(a.statistics.likeCount) - parseInt(b.statistics.likeCount))
+      }
+    }
+
+    case 'likeDecend': {
+      return (a: gapi.client.youtube.Video, b: gapi.client.youtube.Video) => {
+        return (- parseInt(a.statistics.likeCount) + parseInt(b.statistics.likeCount))
+      }
+    }
+    case 'commentAscend': {
+      return (a: gapi.client.youtube.Video, b: gapi.client.youtube.Video) => {
+        return (parseInt(a.statistics.commentCount) - parseInt(b.statistics.commentCount))
+      }
+    }
+    case 'commentDescend': {
+      return (a: gapi.client.youtube.Video, b: gapi.client.youtube.Video) => {
+        return (- parseInt(a.statistics.commentCount) + parseInt(b.statistics.commentCount))
+      }
+    }
+  }
+}
+
 class StoreClass {
   #store: Store;
   get store() { return this.#store }
@@ -59,10 +87,10 @@ class StoreClass {
     console.log('reset store')
     this.#store = createDefaultStore()
   }
-  sortVideoList(compareFunc) {
+  sortVideoList(name: CompareFuncName) {
     if (this.#store.fetchedData.videoResources.length > 0) {
       const newList = [...this.#store.fetchedData.videoResources]
-      newList.sort(compareFunc);
+      newList.sort(compareFunc(name));
       this.#store = {
         fetchedData: {
           ...this.#store,
