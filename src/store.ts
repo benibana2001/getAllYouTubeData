@@ -2,6 +2,10 @@ import fetchAllResources from "./lib/youtubeSnipet";
 import parseFetchedData from "./parse";
 
 type ChannelID = string
+type Video = gapi.client.youtube.Video & {
+  likePerView?: number
+  commentPerView?: number
+}
 type Store = {
   /**
    * 取得した情報をそのまま保持する
@@ -15,7 +19,7 @@ type Store = {
     /**
      * 動画に関する情報を取得するAPIを叩いた結果を保持する
      */
-    videoResources: gapi.client.youtube.Video[] | null;
+    videoResources: Video[] | null;
   };
   /**
    * 表示に使用する計算結果を保持
@@ -46,7 +50,7 @@ const createDefaultStore = () => {
   }
 }
 
-type CompareFuncName = 'likeAscend' | 'likeDecend' | 'commentAscend' | 'commentDescend'
+type CompareFuncName = 'likeAscend' | 'likeDecend' | 'commentAscend' | 'commentDescend' | 'likePerViewAscend' | 'likePerViewDescend' | 'commentPerViewAscend' | 'commentPerViewDescend'
 
 const compareFunc = (name: CompareFuncName) => {
   switch (name) {
@@ -69,6 +73,26 @@ const compareFunc = (name: CompareFuncName) => {
     case 'commentDescend': {
       return (a: gapi.client.youtube.Video, b: gapi.client.youtube.Video) => {
         return (- parseInt(a.statistics.commentCount) + parseInt(b.statistics.commentCount))
+      }
+    }
+    case 'likePerViewAscend': {
+      return (a: Video, b: Video) => {
+        return (a.likePerView - b.likePerView)
+      }
+    }
+    case 'likePerViewDescend': {
+      return (a: Video, b: Video) => {
+        return (- (a.likePerView) + (b.likePerView))
+      }
+    }
+    case 'commentPerViewAscend': {
+      return (a: Video, b: Video) => {
+        return (a.commentPerView - b.commentPerView)
+      }
+    }
+    case 'commentPerViewDescend': {
+      return (a: Video, b: Video) => {
+        return (- (a.commentPerView) + (b.commentPerView))
       }
     }
   }
@@ -106,7 +130,6 @@ class StoreClass {
   async fetch(id: ChannelID) {
     const res = await fetchAllResources(id)
     this.#store = await parseFetchedData(res)
-    console.log(this)
   }
 }
-export { Store, StoreClass, createDefaultStore };
+export { Store, Video, StoreClass, createDefaultStore };

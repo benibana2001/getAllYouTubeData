@@ -75,6 +75,23 @@ export default function App() {
     storeclass.sortVideoList('commentDescend')
     setStore(storeclass.store)
   }
+  const sortLikePerViewAscend = () => {
+    storeclass.sortVideoList('likePerViewAscend')
+    setStore(storeclass.store)
+  }
+  const sortLikePerViewDescend = () => {
+    storeclass.sortVideoList('likePerViewDescend')
+    setStore(storeclass.store)
+  }
+  const sortCommentPerViewAscend = () => {
+    storeclass.sortVideoList('commentPerViewAscend')
+    setStore(storeclass.store)
+  }
+  const sortCommentPerViewDescend = () => {
+    storeclass.sortVideoList('commentPerViewDescend')
+    setStore(storeclass.store)
+  }
+
 
   return (
     <div className="">
@@ -110,6 +127,10 @@ export default function App() {
         <button onClick={sortLikeDecend}>sortLikeDecend</button>
         <button onClick={sortCommentCountAscend}>sortCommentAscend</button>
         <button onClick={sortCommentCountDescend}>sortCommentCountDescend</button>
+        <button onClick={sortLikePerViewAscend}>sortLikePerViewAscend</button>
+        <button onClick={sortLikePerViewDescend}>sortLikePerViewDescend</button>
+        <button onClick={sortCommentPerViewAscend}>sortLikePerViewAscend</button>
+        <button onClick={sortCommentPerViewDescend}>sortCommentPerViewDescend</button>
       </div>
       <div>
         <button onClick={() => { console.log(storeclass) }}>ConsoleStoreclass</button>

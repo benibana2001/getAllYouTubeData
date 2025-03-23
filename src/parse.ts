@@ -63,5 +63,13 @@ export default async function parseFetchedData(store: Store): Promise<Store> {
     0,
   );
 
+  // 1再生数あたりのいいね数を計算
+  fetchedData.videoResources.forEach((video) => {
+    video.likePerView = Math.floor(parseInt(video.statistics.likeCount) / parseInt(video.statistics.viewCount) * 10000) / 100
+    video.commentPerView = Math.floor(parseInt(video.statistics.commentCount) / parseInt(video.statistics.viewCount) * 10000) / 100
+  })
+
+
   return newStore
 }
+
