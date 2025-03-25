@@ -54,10 +54,6 @@ export default async function parseFetchedData(store: Store): Promise<Store> {
         count = parseInt(item.statistics.commentCount);
       }
 
-      if (!item.statistics?.commentCount) {
-        console.log(item);
-      }
-
       return accum + count;
     },
     0,

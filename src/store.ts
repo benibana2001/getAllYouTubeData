@@ -98,6 +98,11 @@ const compareFunc = (name: CompareFuncName) => {
   }
 }
 
+type InputType = "channelID" | "handleName";
+type StoreFetchOptions = {
+  inputType: InputType
+}
+
 class StoreClass {
   #store: Store;
   get store() { return this.#store }
@@ -127,9 +132,10 @@ class StoreClass {
       }
     }
   }
-  async fetch(id: ChannelID) {
-    const res = await fetchAllResources(id)
+  async fetch(id: ChannelID, options?: StoreFetchOptions) {
+    const res = await fetchAllResources(id, options)
     this.#store = await parseFetchedData(res)
   }
 }
-export { Store, Video, StoreClass, createDefaultStore };
+
+export { Store, Video, StoreClass, createDefaultStore, InputType, StoreFetchOptions };

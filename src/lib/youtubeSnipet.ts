@@ -1,14 +1,14 @@
-import { Store, createDefaultStore } from "../store";
+import { Store, createDefaultStore, InputType, StoreFetchOptions } from "../store";
 /**************************************************************
  *********** YouTUbeDataAPIvを使用して3storeに保存するデータをfetchする
  ***********  @returns store: Store
  *************************************************************/
-export default async function fetchAllResources(inputText: string): Promise<Store> {
+export default async function fetchAllResources(inputText: string, options: StoreFetchOptions): Promise<Store> {
   const newStore = createDefaultStore();
   const elemValidationMessage = document.querySelector(".validation-message");
   try {
     // 1. チャンネル情報を取得する TODO: name 'temp' is ambiguious
-    let temp = await fetchChannelResourcesWithChannelId(inputText);
+    let temp = await fetchChannelResourcesWithInputValue(inputText, options);
 
     newStore.fetchedData.channelResources = temp[0];
 
@@ -39,26 +39,41 @@ export default async function fetchAllResources(inputText: string): Promise<Stor
 
 /**
  * チャンネル情報の取得
- * @param {string} channelId
- * @returns {Promise} チャンネル情報
- *
  * https://developers.google.com/youtube/v3/docs/channels?hl=ja
  */
-async function fetchChannelResourcesWithChannelId(channelId) {
-  if (!channelId) {
-    throw new Error(
-      "Channel ID Is not exist. Please Input YouTube Channel ID.",
-    );
+async function fetchChannelResourcesWithInputValue(inputValue: string, { inputType }: StoreFetchOptions) {
+
+
+  let res;
+  if (inputType === 'channelID') {
+    if (!inputValue) {
+      throw new Error(
+        " ChannelID Is not exist. Please Input YouTube Channel ID.",
+      );
+    }
+
+    if (!channelIdValidation(inputValue)) {
+      throw new Error("Channel ID is not Correct.");
+    }
+    res = await gapi.client.youtube.channels.list({
+      part: ["snippet,contentDetails,statistics"],
+      id: [inputValue],
+    });
   }
 
-  if (!channelIdValidation(channelId)) {
-    throw new Error("Channel ID is not Correct.");
+  if (inputType === 'handleName') {
+    if (!inputValue) {
+      throw new Error(
+        " HandleName Is not exist. Please Input YouTube Channel ID.",
+      );
+    }
+    res = await gapi.client.youtube.channels.list({
+      part: ["snippet,contentDetails,statistics"],
+      forHandle: inputValue,
+    });
   }
 
-  const res = await gapi.client.youtube.channels.list({
-    part: ["snippet,contentDetails,statistics"],
-    id: [channelId],
-  });
+
 
   if (res.status !== 200) {
     console.log(res);

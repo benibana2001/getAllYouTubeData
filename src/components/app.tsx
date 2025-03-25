@@ -1,14 +1,12 @@
 import * as React from "react";
-import { loaderInit, LoaderEvent } from "../loader";
 import Result from "./result";
-import { StoreClass } from "../store";
+import Loader from "./loader"
+import { StoreClass, StoreFetchOptions } from "../store";
+import FormArea from './form'
 
 export default function App() {
 
   React.useEffect(() => {
-    // Loaderアイコンの初期化
-    loaderInit();
-
     // @ts-ignore
     if (__DEBUG__) {
       console.log(`** DEBUG MODE **`)
@@ -19,34 +17,17 @@ export default function App() {
     () => new StoreClass(),
     []
   )
-  const [inputValue, setInputValue] = React.useState("")
   const [store, setStore] = React.useState(storeclass.store);
+  const [loaderShow, setLoaderShow] = React.useState(false)
 
-
-
-  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setInputValue(event.target.value)
-  }
-
-  async function requestYouTube() {
-    document.dispatchEvent(
-      new LoaderEvent("busy", {
-        detail: { type: "LoadingChannel", isUiLock: true },
-      })
-    );
-
+  async function requestYouTube(value: string, options: StoreFetchOptions) {
+    setLoaderShow(true)
     // 通信処理を行いstoreに保存
-    await storeclass.fetch(inputValue)
+    await storeclass.fetch(value, options)
     setStore(storeclass.store)
 
-    console.log(storeclass)
     // ユーザーブロック解除
-    document.dispatchEvent(
-      new LoaderEvent("busy", {
-        detail: { type: "LoadingChannel", isUiLock: false },
-      })
-
-    );
+    setLoaderShow(false)
   }
 
   const hasStore = React.useMemo(
@@ -66,7 +47,6 @@ export default function App() {
     storeclass.sortVideoList('likeDecend')
     setStore(storeclass.store)
   }
-
   const sortCommentCountAscend = () => {
     storeclass.sortVideoList('commentAscend')
     setStore(storeclass.store)
@@ -95,33 +75,14 @@ export default function App() {
 
   return (
     <div className="">
+
       {/* 通信結果がまだないときだけ表示する */}
-      {!hasStore &&
-        <form>
-          <h1>GET ALL YOUTUBE VIDEOS FOR A SPECIFIC USER</h1>
-          <div>
-            <input
-              name="channelid"
-              type="text"
-              value={inputValue}
-              placeholder="チャンネルID"
-              onChange={handleChange}
-            />
-            <input
-              className="button-search"
-              type="button"
-              data-func="search"
-              value="SEARCH"
-              onClick={requestYouTube}
-            />
-          </div>
-          <p className="validation-message"></p>
-        </form>
-      }
+      {!hasStore && <FormArea requestYouTube={requestYouTube} />}
 
       <div>
         <button onClick={removeStore}>Close</button>
       </div>
+
       <div>
         <button onClick={sortLikeAscend}>sortLikeAscend</button>
         <button onClick={sortLikeDecend}>sortLikeDecend</button>
@@ -132,15 +93,13 @@ export default function App() {
         <button onClick={sortCommentPerViewAscend}>sortLikePerViewAscend</button>
         <button onClick={sortCommentPerViewDescend}>sortCommentPerViewDescend</button>
       </div>
+
       <div>
         <button onClick={() => { console.log(storeclass) }}>ConsoleStoreclass</button>
         {hasStore && <Result store={store} />}
       </div>
 
-
-      <div className="blocker" data-isshow="false">
-        <div className="lds-ring"><div></div><div></div><div></div><div></div></div>
-      </div>
+      <Loader isShow={loaderShow} />
     </div>
   );
 };
