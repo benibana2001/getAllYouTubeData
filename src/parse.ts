@@ -1,3 +1,4 @@
+import { parseISO, format } from "date-fns";
 import { Store } from "./store";
 import {
   parseDurationStrToAry,
@@ -59,6 +60,10 @@ export default async function parseFetchedData(store: Store): Promise<Store> {
     0,
   );
 
+  // 日付フォーマットの変更
+  fetchedData.videoResources.forEach(video => {
+    video.snippet.publishedAt = format(parseISO(video.snippet.publishedAt), "yyyy年MM月dd日")
+  })
   // 1再生数あたりのいいね数を計算
   fetchedData.videoResources.forEach((video) => {
     video.likePerView = Math.floor(parseInt(video.statistics.likeCount) / parseInt(video.statistics.viewCount) * 10000) / 100

@@ -12,6 +12,7 @@
   --bg-color: #242424;
   --bg-card: rgba(255, 255, 255, 0.1);
   --bg-channel: rgba(255, 255, 255, 0.1);
+  --bg-table: rgba(255, 255, 255, 0.1);
   --hover-opacity: 0.8;
   font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.5;
@@ -141,6 +142,50 @@ form {
   color: red;
 }
 
+.result > * {
+  margin-bottom: 1rem;
+}
+
+.result {
+  table {
+    --border-color: rgba(255, 255, 255, 0.3);
+    --thead-text-color:rgba(255,255,255,0.5);
+    --thead-text-color-hover:rgba(255,255,255,0.2);
+    display: grid;
+      grid-template-columns: minmax(3rem, 8rem) 1fr repeat(5, minmax(1rem, 2.5rem) );
+    text-align: left;
+    background-color: var(--bg-table);
+    padding: 0.4rem;
+    font-size: 0.8rem;
+    thead,
+    tbody,
+    tr {
+      display: contents;
+    }
+    thead {
+      color: var(--thead-text-color);
+      th:hover{
+        color: var(--thead-text-color-hover);
+        transition: all 0.2s ease-out;
+        cursor: pointer;
+      }
+    }
+    thead, tr {
+    }
+    tbody{
+
+    }
+    th, td {
+      border-bottom: 1px solid var(--border-color);
+      display: block;
+      font-weight: normal;
+    }
+    th {
+    }
+    td {
+    }
+  }
+}
 .list-outer {
   width: 100%;
   display: flex;
@@ -196,22 +241,24 @@ form {
     margin-left: 5px;
   }
 }
-
+.card-wrapper{
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0.4rem;
+}
 .card {
-  min-width: 180px;
-  padding: 2.8em;
+  min-width: 100px;
+  padding: 1rem;
   border-radius: 0.6em;
   background-color: var(--bg-card);
-  margin-top: 2em;
-  margin-bottom: 2em;
 
   & h3 {
-    font-size: 1.4em;
+    font-size: 1.0em;
     color: #999;
   }
 
   & > p {
-    font-size: 3.2em;
+    font-size: 1rem;
     font-weight: bold;
     color: #eee;
   }
@@ -220,7 +267,6 @@ form {
 .channel {
   display: flex;
   flex-direction: row;
-  margin: 0 auto;
   padding: 1em;
   background-color: var(--bg-channel);
 

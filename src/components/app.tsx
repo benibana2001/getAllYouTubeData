@@ -39,40 +39,6 @@ export default function App() {
     setStore(storeclass.store)
   }
 
-  const sortLikeAscend = () => {
-    storeclass.sortVideoList('likeAscend')
-    setStore(storeclass.store)
-  }
-  const sortLikeDecend = () => {
-    storeclass.sortVideoList('likeDecend')
-    setStore(storeclass.store)
-  }
-  const sortCommentCountAscend = () => {
-    storeclass.sortVideoList('commentAscend')
-    setStore(storeclass.store)
-  }
-  const sortCommentCountDescend = () => {
-    storeclass.sortVideoList('commentDescend')
-    setStore(storeclass.store)
-  }
-  const sortLikePerViewAscend = () => {
-    storeclass.sortVideoList('likePerViewAscend')
-    setStore(storeclass.store)
-  }
-  const sortLikePerViewDescend = () => {
-    storeclass.sortVideoList('likePerViewDescend')
-    setStore(storeclass.store)
-  }
-  const sortCommentPerViewAscend = () => {
-    storeclass.sortVideoList('commentPerViewAscend')
-    setStore(storeclass.store)
-  }
-  const sortCommentPerViewDescend = () => {
-    storeclass.sortVideoList('commentPerViewDescend')
-    setStore(storeclass.store)
-  }
-
-
   return (
     <div className="">
 
@@ -84,19 +50,11 @@ export default function App() {
       </div>
 
       <div>
-        <button onClick={sortLikeAscend}>sortLikeAscend</button>
-        <button onClick={sortLikeDecend}>sortLikeDecend</button>
-        <button onClick={sortCommentCountAscend}>sortCommentAscend</button>
-        <button onClick={sortCommentCountDescend}>sortCommentCountDescend</button>
-        <button onClick={sortLikePerViewAscend}>sortLikePerViewAscend</button>
-        <button onClick={sortLikePerViewDescend}>sortLikePerViewDescend</button>
-        <button onClick={sortCommentPerViewAscend}>sortLikePerViewAscend</button>
-        <button onClick={sortCommentPerViewDescend}>sortCommentPerViewDescend</button>
+        <button onClick={() => { console.log(storeclass) }}>ConsoleStoreclass</button>
       </div>
 
       <div>
-        <button onClick={() => { console.log(storeclass) }}>ConsoleStoreclass</button>
-        {hasStore && <Result store={store} />}
+        {hasStore && <Result store={store} storeclass={storeclass} setStore={setStore} />}
       </div>
 
       <Loader isShow={loaderShow} />
