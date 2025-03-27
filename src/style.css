@@ -150,7 +150,8 @@ form {
   table {
     --border-color: rgba(255, 255, 255, 0.3);
     --thead-text-color:rgba(255,255,255,0.5);
-    --thead-text-color-hover:rgba(255,255,255,0.2);
+    --thead-text-color-descend:rgba(100,255,255, 0.7);
+    --thead-text-color-ascend:rgba(255,255,100, 0.7);
     display: grid;
       grid-template-columns: minmax(3rem, 8rem) 1fr repeat(5, minmax(1rem, 2.5rem) );
     text-align: left;
@@ -164,9 +165,20 @@ form {
     }
     thead {
       color: var(--thead-text-color);
+      .off {
+        color: inherit;
+      }
+      .ascend {
+        font-weight: bold;
+        color: var(--thead-text-color-ascend)
+      }
+      .descend {
+        font-weight: bold;
+        color: var(--thead-text-color-descend)
+      }
       th:hover{
-        color: var(--thead-text-color-hover);
-        transition: all 0.2s ease-out;
+        filter: brightness(0.7);
+        transition: all 0.1s ease-out;
         cursor: pointer;
       }
     }
@@ -181,6 +193,7 @@ form {
       font-weight: normal;
     }
     th {
+      
     }
     td {
     }

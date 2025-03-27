@@ -1,9 +1,9 @@
 import * as React from "react";
-import List from "./list"
 import Summary from "./summary"
 import Channel from "./channle"
-import { Store, StoreClass, Video } from "../store";
-import { off } from "process";
+import { SortOrder, SortType, Store, StoreClass, Video } from "../store";
+
+type SortStatus = "OFF" | "Descend" | "Ascend"
 
 function TableRow({ video }: { video: Video }) {
   return (
@@ -21,60 +21,45 @@ function TableRow({ video }: { video: Video }) {
 
 export default function Result({ store, storeclass, setStore }: { store: Store, storeclass: StoreClass, setStore: any }) {
 
-  const sortLikeAscend = () => {
-    storeclass.sortVideoList('likeAscend')
+  const sort = (type: SortType, order: SortOrder) => {
+    storeclass.sortVideoList(type, order)
     setStore(storeclass.store)
   }
-  const sortLikeDecend = () => {
-    storeclass.sortVideoList('likeDecend')
-    setStore(storeclass.store)
+  const cssSortClass: Record<SortStatus, string> = {
+    "OFF": 'off',
+    "Ascend": "ascend",
+    "Descend": "descend"
   }
-  const sortCommentCountAscend = () => {
-    storeclass.sortVideoList('commentAscend')
-    setStore(storeclass.store)
+  const defaultSortOrder: Record<SortType, SortOrder> = {
+    View: "OFF",
+    Like: "OFF",
+    Comment: "OFF",
+    LikePerView: "OFF",
+    CommentPerView: "OFF"
   }
-  const sortCommentCountDescend = () => {
-    storeclass.sortVideoList('commentDescend')
-    setStore(storeclass.store)
-  }
-  const sortLikePerViewAscend = () => {
-    storeclass.sortVideoList('likePerViewAscend')
-    setStore(storeclass.store)
-  }
-  const sortLikePerViewDescend = () => {
-    storeclass.sortVideoList('likePerViewDescend')
-    setStore(storeclass.store)
-  }
-  const sortCommentPerViewAscend = () => {
-    storeclass.sortVideoList('commentPerViewAscend')
-    setStore(storeclass.store)
-  }
-  const sortCommentPerViewDescend = () => {
-    storeclass.sortVideoList('commentPerViewDescend')
-    setStore(storeclass.store)
-  }
+  const [sortOrder, setSortOrder] = React.useState({ ...defaultSortOrder })
 
-  type SortStatus = "OFF" | "Descend" | "Ascend"
-  const [likeSort, setLikeSort] = React.useState<SortStatus>("OFF")
-  const sortLike = () => {
-    switch (likeSort) {
-      case "OFF":
-        console.log('off -> descend')
-        sortLikeDecend();
-        setLikeSort("Descend")
-        break;
-      case "Descend":
-        console.log('descend -> ascend')
-        sortLikeAscend();
-        setLikeSort("Ascend")
-        break;
-      case "Ascend":
-        console.log('ascend -> descend')
-        sortLikeDecend();
-        setLikeSort("Descend")
-        break;
+  const clickHandler = (type: SortType) => {
+    return () => {
+      const currentOrder = sortOrder[type]
+      switch (currentOrder) {
+        case "OFF":
+        case "Ascend":
+          sort(type, 'Descend')
+          setSortOrder({
+            ...defaultSortOrder,
+            [type]: "Descend"
+          })
+          break;
+        case "Descend":
+          sort(type, 'Ascend')
+          setSortOrder({
+            ...defaultSortOrder,
+            [type]: "Ascend"
+          })
+          break;
+      }
     }
-    console.log(`likeSort: ${likeSort}`)
   }
 
   return (
@@ -82,42 +67,44 @@ export default function Result({ store, storeclass, setStore }: { store: Store, 
       <Channel channelResources={store.fetchedData.channelResources} />
       <Summary store={store} />
 
-      {/*
-      {store.fetchedData.videoResources.map((resources) => (
-        <List item={resources} key={resources.id} />
-      ))}
-      */}
-      <div>
-        <button onClick={sortLikeAscend}>sortLikeAscend</button>
-        <button onClick={sortLikeDecend}>sortLikeDecend</button>
-        <button onClick={sortCommentCountAscend}>sortCommentAscend</button>
-        <button onClick={sortCommentCountDescend}>sortCommentCountDescend</button>
-        <button onClick={sortLikePerViewAscend}>sortLikePerViewAscend</button>
-        <button onClick={sortLikePerViewDescend}>sortLikePerViewDescend</button>
-        <button onClick={sortCommentPerViewAscend}>sortLikePerViewAscend</button>
-        <button onClick={sortCommentPerViewDescend}>sortCommentPerViewDescend</button>
-      </div>
       <table className="result-table">
         <thead>
           <th>公開日</th>
           <th>タイトル</th>
-          <th>視聴</th>
-          <th onClick={sortLike}>高評価</th>
-          <th>コメント</th>
-          <th>高評価/視聴</th>
-          <th>コメント/視聴</th>
+          <th
+            className={cssSortClass[sortOrder["View"]]}
+            onClick={clickHandler("View")}>
+
+            視聴</th>
+          <th
+            className={cssSortClass[sortOrder["Like"]]}
+            onClick={clickHandler("Like")}>
+            高評価</th>
+          <th
+            className={cssSortClass[sortOrder["Comment"]]}
+            onClick={clickHandler("Comment")}>
+            コメント</th>
+          <th
+            className={cssSortClass[sortOrder["LikePerView"]]}
+            onClick={clickHandler("LikePerView")}>
+            高評価/視聴</th>
+          <th
+            className={cssSortClass[sortOrder["CommentPerView"]]}
+            onClick={clickHandler("CommentPerView")}>
+            コメント/視聴</th>
         </thead>
         <tbody>
           {store.fetchedData.videoResources.map((resources) => (
             <TableRow video={resources} key={resources.id} />
           ))}
         </tbody>
-      </table>
+      </table >
 
       <div className="blocker" data-isshow="false">
         <div className="lds-ring"><div></div><div></div><div></div><div></div></div>
       </div>
-    </div>
+    </div >
   );
 };
 
+export { SortStatus, }

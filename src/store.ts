@@ -50,49 +50,71 @@ const createDefaultStore = () => {
   }
 }
 
-type CompareFuncName = 'likeAscend' | 'likeDecend' | 'commentAscend' | 'commentDescend' | 'likePerViewAscend' | 'likePerViewDescend' | 'commentPerViewAscend' | 'commentPerViewDescend'
+type SortType = 'View' | 'Like' | 'Comment' | 'LikePerView' | 'CommentPerView'
+type SortOrder = 'Descend' | 'Ascend' | "OFF"
 
-const compareFunc = (name: CompareFuncName) => {
-  switch (name) {
-    case 'likeAscend': {
-      return (a: gapi.client.youtube.Video, b: gapi.client.youtube.Video) => {
-        return (parseInt(a.statistics.likeCount) - parseInt(b.statistics.likeCount))
+const compareFunc = (type: SortType, order: SortOrder) => {
+  if (!type || !order) console.error('No CompareFunc')
+  switch (type) {
+    case 'View': {
+      if (order === 'Ascend') {
+        return (a: gapi.client.youtube.Video, b: gapi.client.youtube.Video) => {
+          return (parseInt(a.statistics.viewCount) - parseInt(b.statistics.viewCount))
+        }
+      }
+      if (order === 'Descend') {
+        return (a: gapi.client.youtube.Video, b: gapi.client.youtube.Video) => {
+          return (- parseInt(a.statistics.viewCount) + parseInt(b.statistics.viewCount))
+        }
       }
     }
+    case 'Like': {
+      if (order === 'Ascend') {
+        return (a: gapi.client.youtube.Video, b: gapi.client.youtube.Video) => {
+          return (parseInt(a.statistics.likeCount) - parseInt(b.statistics.likeCount))
+        }
+      }
+      if (order === 'Descend') {
+        return (a: gapi.client.youtube.Video, b: gapi.client.youtube.Video) => {
+          return (- parseInt(a.statistics.likeCount) + parseInt(b.statistics.likeCount))
+        }
+      }
+    }
+    case 'Comment': {
+      if (order === 'Ascend') {
+        return (a: gapi.client.youtube.Video, b: gapi.client.youtube.Video) => {
+          return (parseInt(a.statistics.commentCount) - parseInt(b.statistics.commentCount))
+        }
+      }
+      if (order === 'Descend') {
 
-    case 'likeDecend': {
-      return (a: gapi.client.youtube.Video, b: gapi.client.youtube.Video) => {
-        return (- parseInt(a.statistics.likeCount) + parseInt(b.statistics.likeCount))
+        return (a: gapi.client.youtube.Video, b: gapi.client.youtube.Video) => {
+          return (- parseInt(a.statistics.commentCount) + parseInt(b.statistics.commentCount))
+        }
       }
     }
-    case 'commentAscend': {
-      return (a: gapi.client.youtube.Video, b: gapi.client.youtube.Video) => {
-        return (parseInt(a.statistics.commentCount) - parseInt(b.statistics.commentCount))
+    case 'LikePerView': {
+      if (order === 'Ascend') {
+        return (a: Video, b: Video) => {
+          return (a.likePerView - b.likePerView)
+        }
+      }
+      if (order === 'Descend') {
+        return (a: Video, b: Video) => {
+          return (- (a.likePerView) + (b.likePerView))
+        }
       }
     }
-    case 'commentDescend': {
-      return (a: gapi.client.youtube.Video, b: gapi.client.youtube.Video) => {
-        return (- parseInt(a.statistics.commentCount) + parseInt(b.statistics.commentCount))
+    case 'CommentPerView': {
+      if (order === 'Ascend') {
+        return (a: Video, b: Video) => {
+          return (a.commentPerView - b.commentPerView)
+        }
       }
-    }
-    case 'likePerViewAscend': {
-      return (a: Video, b: Video) => {
-        return (a.likePerView - b.likePerView)
-      }
-    }
-    case 'likePerViewDescend': {
-      return (a: Video, b: Video) => {
-        return (- (a.likePerView) + (b.likePerView))
-      }
-    }
-    case 'commentPerViewAscend': {
-      return (a: Video, b: Video) => {
-        return (a.commentPerView - b.commentPerView)
-      }
-    }
-    case 'commentPerViewDescend': {
-      return (a: Video, b: Video) => {
-        return (- (a.commentPerView) + (b.commentPerView))
+      if (order === 'Descend') {
+        return (a: Video, b: Video) => {
+          return (- (a.commentPerView) + (b.commentPerView))
+        }
       }
     }
   }
@@ -116,10 +138,10 @@ class StoreClass {
     console.log('reset store')
     this.#store = createDefaultStore()
   }
-  sortVideoList(name: CompareFuncName) {
+  sortVideoList(type: SortType, order: SortOrder) {
     if (this.#store.fetchedData.videoResources.length > 0) {
       const newList = [...this.#store.fetchedData.videoResources]
-      newList.sort(compareFunc(name));
+      newList.sort(compareFunc(type, order));
       this.#store = {
         fetchedData: {
           ...this.#store,
@@ -138,4 +160,4 @@ class StoreClass {
   }
 }
 
-export { Store, Video, StoreClass, createDefaultStore, InputType, StoreFetchOptions };
+export { Store, Video, StoreClass, createDefaultStore, InputType, StoreFetchOptions, SortType, SortOrder };

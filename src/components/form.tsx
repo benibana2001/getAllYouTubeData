@@ -4,7 +4,7 @@ import { InputType } from "../store"
 export default function FormArea({ requestYouTube }) {
   const [inputValue, setInputValue] = React.useState<string>("")
 
-  const [radioValue, setRadioValue] = React.useState<InputType>('channelID')
+  const [radioValue, setRadioValue] = React.useState<InputType>('handleName')
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     console.log(event.target.value)
@@ -21,20 +21,20 @@ export default function FormArea({ requestYouTube }) {
     <form>
       <h1>GET ALL YOUTUBE VIDEOS FOR A SPECIFIC USER</h1>
       <div>
-        <label htmlFor="radio_1">チャンネルID</label>
+        <label htmlFor="radio_1">ハンドルネーム</label>
         <input
           id="radio_1"
           type="radio"
-          value={'channelID'}
+          value={'handleName'}
           name="group"
           onChange={hadleChangeRadio}
           defaultChecked={true}
         />
-        <label htmlFor="radio_2">ハンドルネーム</label>
+        <label htmlFor="radio_2">チャンネルID</label>
         <input
           id="radio_2"
           type="radio"
-          value={'handleName'}
+          value={'channelID'}
           name="group"
           onChange={hadleChangeRadio}
         />
