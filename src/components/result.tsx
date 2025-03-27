@@ -1,4 +1,5 @@
 import * as React from "react";
+import { Tooltip } from 'react-tooltip';
 import Summary from "./summary"
 import Channel from "./channle"
 import { SortOrder, SortType, Store, StoreClass, Video } from "../store";
@@ -8,8 +9,17 @@ type SortStatus = "OFF" | "Descend" | "Ascend"
 function TableRow({ video }: { video: Video }) {
   return (
     <tr>
+      <Tooltip id={video.id}>
+        <div>{video.snippet.title}</div>
+        <div>{video.id}</div>
+        <div><img src={video.snippet.thumbnails.default.url} /></div>
+      </Tooltip>
       <th>{video.snippet.publishedAt}</th>
-      <th>{video.snippet.title}</th>
+      <td data-tooltip-id={video.id} >
+        <a href={`https://`}>
+          {video.snippet.title}
+        </a>
+      </td>
       <td>{video.statistics.viewCount}</td>
       <td>{video.statistics.likeCount}</td>
       <td>{video.statistics.commentCount}</td>
@@ -94,7 +104,7 @@ export default function Result({ store, storeclass, setStore }: { store: Store, 
             コメント/視聴</th>
         </thead>
         <tbody>
-          {store.fetchedData.videoResources.map((resources) => (
+          {store.fetchedData.videoResources.map((resources,) => (
             <TableRow video={resources} key={resources.id} />
           ))}
         </tbody>

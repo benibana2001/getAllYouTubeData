@@ -3,6 +3,7 @@ import Result from "./result";
 import Loader from "./loader"
 import { StoreClass, StoreFetchOptions } from "../store";
 import FormArea from './form'
+import 'react-tooltip/dist/react-tooltip.css'
 
 export default function App() {
 

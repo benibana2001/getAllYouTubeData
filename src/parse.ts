@@ -59,6 +59,8 @@ export default async function parseFetchedData(store: Store): Promise<Store> {
     },
     0,
   );
+  // 合計動画数を計算
+  displayData.totalVideoCount = fetchedData.videoResources.length
 
   // 日付フォーマットの変更
   fetchedData.videoResources.forEach(video => {
