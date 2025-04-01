@@ -20,12 +20,20 @@ export default function App() {
   )
   const [store, setStore] = React.useState(storeclass.store);
   const [loaderShow, setLoaderShow] = React.useState(false)
+  const [errorMessage, setErrorMessage] = React.useState("")
 
   async function requestYouTube(value: string, options: StoreFetchOptions) {
     setLoaderShow(true)
-    // 通信処理を行いstoreに保存
-    await storeclass.fetch(value, options)
-    setStore(storeclass.store)
+    try {
+      if (errorMessage) setErrorMessage("") // エラーメッセージがあれば非表示する
+      await storeclass.fetch(value, options) // 通信処理を行いstoreに保存
+      setStore(storeclass.store)
+    } catch (e: unknown) {
+      if (e instanceof Error) {
+        console.error(e.message)
+        setErrorMessage(e.message)
+      }
+    }
 
     // ユーザーブロック解除
     setLoaderShow(false)
@@ -40,6 +48,9 @@ export default function App() {
 
       {/* 通信結果がまだないときだけ表示する */}
       {!hasStore && <FormArea requestYouTube={requestYouTube} />}
+
+      {errorMessage && <p className="validation-message">{errorMessage}</p>}
+
       {hasStore && <Result store={store} storeclass={storeclass} setStore={setStore} />}
 
       <Loader isShow={loaderShow} />

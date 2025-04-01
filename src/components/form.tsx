@@ -16,17 +16,15 @@ export default function FormArea({ requestYouTube }) {
     setRadioValue(e.target.value)
   }
 
+  const handleSubmit = () => {
+    requestYouTube(inputValue, { inputType: radioValue })
+  }
+
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    e.preventDefault()
-    console.log(e)
     if (e.key === "Enter") {
       e.preventDefault()
       handleSubmit()
     }
-    function handleSubmit() {
-      console.log(`handleSubmit: ${inputValue}, ${radioValue}`)
-    }
-
   }
 
 
@@ -79,10 +77,9 @@ export default function FormArea({ requestYouTube }) {
           type="button"
           data-func="search"
           value="SEARCH"
-          onClick={() => { requestYouTube(inputValue, { inputType: radioValue }) }}
+          onClick={handleSubmit}
         />
       </div>
-      <p className="validation-message"></p>
     </form>
   )
 }

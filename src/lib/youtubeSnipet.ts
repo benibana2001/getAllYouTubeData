@@ -5,31 +5,22 @@ import { Store, createDefaultStore, InputType, StoreFetchOptions } from "../stor
  *************************************************************/
 export default async function fetchAllResources(inputText: string, options: StoreFetchOptions): Promise<Store> {
   const newStore = createDefaultStore();
-  const elemValidationMessage = document.querySelector(".validation-message");
-  try {
-    // 1. チャンネル情報を取得する TODO: name 'temp' is ambiguious
-    let temp = await fetchChannelResourcesWithInputValue(inputText, options);
+  // 1. チャンネル情報を取得する TODO: name 'temp' is ambiguious
+  let temp = await fetchChannelResourcesWithInputValue(inputText, options);
 
-    newStore.fetchedData.channelResources = temp[0];
+  newStore.fetchedData.channelResources = temp[0];
 
-    // 2. 全動画のIDを取得する
-    temp = await fetchAllVideoWithPlaylistId(
-      // このプレイリストには全体公開されているすべての動画IDが含まれると推察される
-      newStore.fetchedData.channelResources.contentDetails.relatedPlaylists
-        .uploads,
-    );
+  // 2. 全動画のIDを取得する
+  temp = await fetchAllVideoWithPlaylistId(
+    // このプレイリストには全体公開されているすべての動画IDが含まれると推察される
+    newStore.fetchedData.channelResources.contentDetails.relatedPlaylists
+      .uploads,
+  );
 
-    // 3. 全動画情報を取得する
-    temp = await fetchVideoResourcesWithVideoId(temp);
-    newStore.fetchedData.videoResources = temp.flat();
-    return newStore;
-
-  } catch (err) {
-    console.error(err);
-    elemValidationMessage.textContent = err.message;
-
-    return;
-  }
+  // 3. 全動画情報を取得する
+  temp = await fetchVideoResourcesWithVideoId(temp);
+  newStore.fetchedData.videoResources = temp.flat();
+  return newStore;
 }
 
 /**
