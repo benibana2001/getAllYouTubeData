@@ -35,28 +35,12 @@ export default function App() {
     () => !!store.fetchedData.channelResources, [store]
   )
 
-  const removeStore = () => {
-    storeclass.resetStore()
-    setStore(storeclass.store)
-  }
-
   return (
     <div className="">
 
       {/* 通信結果がまだないときだけ表示する */}
       {!hasStore && <FormArea requestYouTube={requestYouTube} />}
-
-      <div>
-        <button onClick={removeStore}>Close</button>
-      </div>
-
-      <div>
-        <button onClick={() => { console.log(storeclass) }}>ConsoleStoreclass</button>
-      </div>
-
-      <div>
-        {hasStore && <Result store={store} storeclass={storeclass} setStore={setStore} />}
-      </div>
+      {hasStore && <Result store={store} storeclass={storeclass} setStore={setStore} />}
 
       <Loader isShow={loaderShow} />
     </div>

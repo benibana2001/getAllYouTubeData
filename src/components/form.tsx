@@ -16,6 +16,19 @@ export default function FormArea({ requestYouTube }) {
     setRadioValue(e.target.value)
   }
 
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    e.preventDefault()
+    console.log(e)
+    if (e.key === "Enter") {
+      e.preventDefault()
+      handleSubmit()
+    }
+    function handleSubmit() {
+      console.log(`handleSubmit: ${inputValue}, ${radioValue}`)
+    }
+
+  }
+
 
   return (
     <form>
@@ -48,6 +61,7 @@ export default function FormArea({ requestYouTube }) {
             value={inputValue}
             placeholder='チャンネルID'
             onChange={handleChange}
+            onKeyDown={handleKeyDown}
           />
         }
         {radioValue === 'handleName' &&
@@ -57,6 +71,7 @@ export default function FormArea({ requestYouTube }) {
             value={inputValue}
             placeholder='ハンドルネーム'
             onChange={handleChange}
+            onKeyDown={handleKeyDown}
           />
         }
         <input

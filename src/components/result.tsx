@@ -72,8 +72,18 @@ export default function Result({ store, storeclass, setStore }: { store: Store, 
     }
   }
 
+  const removeStore = () => {
+    storeclass.resetStore()
+    setStore(storeclass.store)
+  }
+
   return (
     <div className="result">
+      <div>
+        <button onClick={removeStore}>ResetStore</button>
+        <button onClick={() => { console.log(storeclass) }}>ConsoleStoreclass</button>
+      </div>
+
       <Channel channelResources={store.fetchedData.channelResources} />
       <Summary store={store} />
 
