@@ -302,6 +302,13 @@ form {
   &:hover {
     opacity: var(--hover-opacity);
   }
+  & div a {
+    display: block;
+    width: 5rem;
+    height: 5rem;
+    border-radius: 50%;
+    overflow: hidden;
+  }
   & a:hover {
     cursor: pointer;
   }
