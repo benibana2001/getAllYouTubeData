@@ -16,6 +16,7 @@
   --hover-opacity: 0.8;
   --text-color: rgba(255, 255, 255, 0.87);
   --text-link-color: rgba(255, 255, 255, 0.7);
+  --border-radius-base: 0.4em;
   font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.5;
   font-weight: 400;
@@ -151,15 +152,19 @@ form {
 .result {
   table {
     --border-color: rgba(255, 255, 255, 0.3);
-    --thead-text-color:rgba(255,255,255,0.5);
-    --thead-text-color-descend:rgba(100,255,255, 0.7);
-    --thead-text-color-ascend:rgba(255,255,100, 0.7);
+    --thead-text-color: rgba(255, 255, 255, 0.5);
+    --thead-text-color-descend: rgba(100, 255, 255, 0.7);
+    --thead-text-color-ascend: rgba(255, 255, 100, 0.7);
     display: grid;
-      grid-template-columns: minmax(3rem, 8rem) 1fr repeat(5, minmax(1rem, 2.5rem) );
+    grid-template-columns: minmax(3rem, 8rem) 1fr repeat(
+        5,
+        minmax(1rem, 2.5rem)
+      );
     text-align: left;
     background-color: var(--bg-table);
     padding: 0.4rem;
     font-size: 0.8rem;
+    border-radius: var(--border-radius-base);
     thead,
     tbody,
     tr {
@@ -172,30 +177,33 @@ form {
       }
       .ascend {
         font-weight: bold;
-        color: var(--thead-text-color-ascend)
+        color: var(--thead-text-color-ascend);
       }
       .descend {
         font-weight: bold;
-        color: var(--thead-text-color-descend)
+        color: var(--thead-text-color-descend);
       }
-      th:hover{
+      th:hover {
         filter: brightness(0.7);
         transition: all 0.1s ease-out;
         cursor: pointer;
       }
     }
-    thead, tr {
+    thead,
+    tr {
     }
-    tbody{
-
+    tbody {
     }
-    th, td {
+    th,
+    td {
       border-bottom: 1px solid var(--border-color);
       display: block;
       font-weight: normal;
     }
-    th { }
-    td { }
+    th {
+    }
+    td {
+    }
     a {
       color: var(--text-link-color);
       &:hover {
@@ -212,7 +220,7 @@ form {
   flex-direction: row-reverse;
   justify-content: flex-end;
   margin-bottom: 10px;
-  border-radius: 3px;
+  border-radius: var(--border-radius-base);
   background-color: #111;
   transition: 0.1s linear all;
 
@@ -261,7 +269,7 @@ form {
     margin-left: 5px;
   }
 }
-.card-wrapper{
+.card-wrapper {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 0.4rem;
@@ -269,11 +277,11 @@ form {
 .card {
   min-width: 100px;
   padding: 1rem;
-  border-radius: 0.6em;
+  border-radius: var(--border-radius-base);
   background-color: var(--bg-card);
 
   & h3 {
-    font-size: 1.0em;
+    font-size: 1em;
     color: #999;
   }
 
@@ -289,12 +297,17 @@ form {
   flex-direction: row;
   padding: 1em;
   background-color: var(--bg-channel);
+  border-radius: var(--border-radius-base);
 
   &:hover {
     opacity: var(--hover-opacity);
   }
   & a:hover {
     cursor: pointer;
+  }
+
+  & > * + * {
+    padding-left: 1em;
   }
 }
 
