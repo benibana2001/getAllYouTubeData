@@ -1,23 +1,28 @@
 import * as React from "react"
-import { InputType } from "../store"
+import { InputType, isInputType } from "../store"
 
 export default function FormArea({ requestYouTube }) {
   const [inputValue, setInputValue] = React.useState<string>("")
 
-  const [radioValue, setRadioValue] = React.useState<InputType>('handleName')
+  const [inputMethod, setInputMehod] = React.useState<InputType>('handleName')
 
-  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleChangeTextArea = (event: React.ChangeEvent<HTMLInputElement>) => {
     console.log(event.target.value)
     setInputValue(event.target.value)
   }
 
-  const hadleChangeRadio = (e) => {
-    console.log(e.target.value)
-    setRadioValue(e.target.value)
+  const handleClickInputMethod = (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault();
+    console.log(e.currentTarget.value)
+    if (isInputType(e.currentTarget.value)) {
+      setInputMehod(e.currentTarget.value)
+    } else {
+      console.log('inputMethodには"channelID"か"handleName"を設定する必要がある')
+    }
   }
 
   const handleSubmit = () => {
-    requestYouTube(inputValue, { inputType: radioValue })
+    requestYouTube(inputValue, { inputType: inputMethod })
   }
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
@@ -27,51 +32,65 @@ export default function FormArea({ requestYouTube }) {
     }
   }
 
-
   return (
-    <form>
+    <>
       <h1>GET ALL YOUTUBE VIDEOS FOR A SPECIFIC USER</h1>
-      <div>
-        <label htmlFor="radio_1">ハンドルネーム</label>
-        <input
-          id="radio_1"
-          type="radio"
-          value={'handleName'}
-          name="group"
-          onChange={hadleChangeRadio}
-          defaultChecked={true}
-        />
-        <label htmlFor="radio_2">チャンネルID</label>
-        <input
-          id="radio_2"
-          type="radio"
-          value={'channelID'}
-          name="group"
-          onChange={hadleChangeRadio}
-        />
-      </div>
+      <form>
+        <div className="input-area">
+          {/* チャンネル指定方法を選択ボタン */}
+          <div className="button-input-methods">
+            <p>検索方法を選択</p>
+            <div className="inner">
+              <button
+                className={inputMethod === 'handleName' ? "input-method-selected" : ''}
+                onClick={handleClickInputMethod}
+                value={'handleName'}
+              >
+                ハンドルネーム
+              </button>
+              <button
+                className={inputMethod === 'channelID' ? "input-method-selected" : ''}
+                onClick={handleClickInputMethod}
+                value={'channelID'}
+              >
+                チャンネルID
+              </button>
+            </div>
+          </div>
 
-      <div>
-        {radioValue === 'channelID' &&
-          <input
-            name="inputValue"
-            type="text"
-            value={inputValue}
-            placeholder='チャンネルID'
-            onChange={handleChange}
-            onKeyDown={handleKeyDown}
-          />
-        }
-        {radioValue === 'handleName' &&
-          <input
-            name="inputValue"
-            type="text"
-            value={inputValue}
-            placeholder='ハンドルネーム'
-            onChange={handleChange}
-            onKeyDown={handleKeyDown}
-          />
-        }
+          {/* 文字列入力*/}
+          <div className="text-input">
+            {inputMethod === 'channelID' &&
+              <div>
+                <p>チャンネルID</p>
+                <div className="inner">
+                  <input
+                    name="inputValue"
+                    type="text"
+                    value={inputValue}
+                    onChange={handleChangeTextArea}
+                    onKeyDown={handleKeyDown}
+                  />
+                </div>
+              </div>
+            }
+            {inputMethod === 'handleName' &&
+              <div>
+                <p>ハンドルネーム</p>
+                <div className="inner">
+                  <input
+                    name="inputValue"
+                    type="text"
+                    value={inputValue}
+                    onChange={handleChangeTextArea}
+                    onKeyDown={handleKeyDown}
+                  />
+                </div>
+              </div>
+            }
+          </div>
+        </div>
+
         <input
           className="button-search"
           type="button"
@@ -79,7 +98,7 @@ export default function FormArea({ requestYouTube }) {
           value="SEARCH"
           onClick={handleSubmit}
         />
-      </div>
-    </form>
+      </form>
+    </>
   )
 }

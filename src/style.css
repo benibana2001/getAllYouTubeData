@@ -13,10 +13,14 @@
   --bg-card: rgba(255, 255, 255, 0.1);
   --bg-channel: rgba(255, 255, 255, 0.1);
   --bg-table: rgba(255, 255, 255, 0.1);
-  --hover-opacity: 0.8;
   --text-color: rgba(255, 255, 255, 0.87);
   --text-link-color: rgba(255, 255, 255, 0.7);
+  --button-color-gray: #a0a0a0;
+  --input-text-area-color: #a0a0a0;
+
   --border-radius-base: 0.4em;
+  --hover-opacity: 0.8;
+
   font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.5;
   font-weight: 400;
@@ -64,34 +68,78 @@ li {
 }
 
 form {
-  margin-top: auto;
-  margin-bottom: auto;
+  margin: auto;
   display: flex;
   flex-direction: column;
-  place-content: center;
-  place-items: center;
+  align-items: flex-start;
 
-  & > h1 {
-    text-align: center;
-  }
+  max-width: 600px;
+}
 
-  & > div {
+form > .input-area {
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+
+  border: 0.1px solid gray;
+  padding: 1em;
+
+  & > * {
     display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    gap: 1em;
+    flex-direction: column;
   }
 
-  & input[type="text"] {
-    text-align: center;
-    min-width: 280px;
-    font-size: 1.1em;
-    background-color: transparent;
-    border: 0.1px solid #aaa;
+  & > * + * {
+    margin-top: 1em;
   }
 
-  & input:focus-visible {
-    outline: 0.1px slid #535bf2;
+  & > div.button-input-methods {
+    & .inner {
+      display: flex;
+      border: 1px solid black;
+      border-radius: 0.6em;
+      overflow: hidden;
+
+      & > button {
+        flex: 1 1 20em;
+        width: 10em;
+        border: none;
+        background-color: var(--button-color-gray);
+        padding: 0.5em 1.4em;
+        color: var(--text-color);
+      }
+      & > button + button {
+        border-left: 1px solid #605050;
+      }
+      & > button:hover {
+        cursor: pointer;
+        opacity: 0.8;
+      }
+      & > button.input-method-selected {
+        background-color: #00ab00; /* green */
+      }
+    }
+  }
+
+  & > .text-input {
+    & .inner {
+      background-color: var(--input-text-area-color);
+      padding: 0.4em;
+    }
+
+    & input[type="text"] {
+      color: var(--text-color);
+      text-align: center;
+      max-width: 20em;
+      font-size: 1.1em;
+      text-align: left;
+      background-color: transparent;
+      border: none;
+      border-bottom: 0.1px solid #aaa;
+    }
+    & input:focus-visible {
+      outline: 0.1px slid #535bf2;
+    }
   }
 
   &[data-visible="hidden"] {

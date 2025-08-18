@@ -16,6 +16,9 @@ export default async function fetchAllResources(inputText: string, options: Stor
     newStore.fetchedData.channelResources.contentDetails.relatedPlaylists
       .uploads,
   );
+  console.log("temp")
+  console.log(newStore.fetchedData.channelResources.contentDetails.relatedPlaylists.uploads)
+  console.log(temp)
 
   // 3. 全動画情報を取得する
   temp = await fetchVideoResourcesWithVideoId(temp);
@@ -133,6 +136,7 @@ async function fetchAllVideoWithPlaylistId(playlistId: string, pageToken = "") {
   if (!playlistId) {
     throw new Error("Not Exist User Video List");
   }
+  console.log(playlistId)
 
   const options = {
     part: ["snippet,contentDetails"],
@@ -143,6 +147,7 @@ async function fetchAllVideoWithPlaylistId(playlistId: string, pageToken = "") {
     options["pageToken"] = pageToken;
   }
   const res = await gapi.client.youtube.playlistItems.list(options);
+  console.log(res)
   // 動画IDのみを切り出してarrayを作る
   const temp = res.result.items.map((item) => item.contentDetails.videoId);
   if (!res.result.nextPageToken) {
