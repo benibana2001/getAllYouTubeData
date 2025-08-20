@@ -2,6 +2,7 @@ import * as React from "react";
 import Result from "./result";
 import Loader from "./loader"
 import { StoreClass, StoreFetchOptions } from "../store";
+import Header from './header'
 import FormArea from './form'
 import 'react-tooltip/dist/react-tooltip.css'
 
@@ -45,13 +46,21 @@ export default function App() {
 
   return (
     <div className="">
+      <Header />
 
-      {/* 通信結果がまだないときだけ表示する */}
-      {!hasStore && <FormArea requestYouTube={requestYouTube} />}
+      <main>
+        <div className="description">
+          <p>YouTube配信者のハンドルネームをもとに、チャンネルの詳細な情報を取得します。</p>
+        </div>
+        {/* 検索フォーム */}
+        {/* 通信結果がまだないときだけ表示する */}
+        {!hasStore && <FormArea requestYouTube={requestYouTube} />}
+        {errorMessage && <p className="validation-message">{errorMessage}</p>}
 
-      {errorMessage && <p className="validation-message">{errorMessage}</p>}
+        {/* 検索結果画面 */}
+        {hasStore && <Result store={store} storeclass={storeclass} setStore={setStore} />}
 
-      {hasStore && <Result store={store} storeclass={storeclass} setStore={setStore} />}
+      </main>
 
       <Loader isShow={loaderShow} />
     </div>

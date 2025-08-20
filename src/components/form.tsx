@@ -34,12 +34,15 @@ export default function FormArea({ requestYouTube }) {
 
   return (
     <>
-      <h1>GET ALL YOUTUBE VIDEOS FOR A SPECIFIC USER</h1>
       <form>
         <div className="input-area">
           {/* チャンネル指定方法を選択ボタン */}
           <div className="button-input-methods">
-            <p>検索方法を選択</p>
+            <label>
+              <span className="field-label">検索方法を選択</span>
+              <span className="field-hint">チャンネルの検索指定条件を以下のいずれかから選択する</span>
+            </label>
+
             <div className="inner">
               <button
                 className={inputMethod === 'handleName' ? "input-method-selected" : ''}
@@ -62,9 +65,10 @@ export default function FormArea({ requestYouTube }) {
           <div className="text-input">
             {inputMethod === 'channelID' &&
               <div>
-                <p>チャンネルID</p>
+                <label htmlFor="inputValueChannelID">チャンネルID</label>
                 <div className="inner">
                   <input
+                    id="inputValueChannelID"
                     name="inputValue"
                     type="text"
                     value={inputValue}
@@ -76,9 +80,10 @@ export default function FormArea({ requestYouTube }) {
             }
             {inputMethod === 'handleName' &&
               <div>
-                <p>ハンドルネーム</p>
+                <label htmlFor="inputValueHandleName">ハンドルネーム</label>
                 <div className="inner">
                   <input
+                    id="inputValueHandleName"
                     name="inputValue"
                     type="text"
                     value={inputValue}
@@ -95,7 +100,7 @@ export default function FormArea({ requestYouTube }) {
           className="button-search"
           type="button"
           data-func="search"
-          value="SEARCH"
+          value="検索"
           onClick={handleSubmit}
         />
       </form>

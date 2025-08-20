@@ -16,7 +16,7 @@
   --text-color: rgba(255, 255, 255, 0.87);
   --text-link-color: rgba(255, 255, 255, 0.7);
   --button-color-gray: #a0a0a0;
-  --input-text-area-color: #a0a0a0;
+  --input-text-area-color: #e0e0e0;
 
   --border-radius-base: 0.4em;
   --hover-opacity: 0.8;
@@ -47,6 +47,14 @@ body {
   min-width: 320px;
 }
 
+main {
+  padding: 1em;
+
+  & > * + * {
+    margin-top: 1em;
+  }
+}
+
 a {
   font-weight: 500;
   color: #646cff;
@@ -68,29 +76,49 @@ li {
 }
 
 form {
-  margin: auto;
   display: flex;
   flex-direction: column;
   align-items: flex-start;
 
   max-width: 600px;
+
+  & > * + * {
+    margin-top: 1em;
+  }
 }
 
 form > .input-area {
+  --form-background-color: #c0c0c0;
+  --form-text-color: #202020;
+
   display: flex;
   justify-content: center;
   flex-direction: column;
 
   border: 0.1px solid gray;
+  background-color: var(--form-background-color);
   padding: 1em;
 
   & > * {
     display: flex;
     flex-direction: column;
+    color: var(--form-text-color);
   }
 
   & > * + * {
     margin-top: 1em;
+  }
+
+  & label {
+    display: block;
+    & > span {
+      display: block;
+    }
+    & span.field-label {
+      font-weight: bold;
+    }
+    & span.field-hint {
+    }
   }
 
   & > div.button-input-methods {
@@ -112,7 +140,6 @@ form > .input-area {
         border-left: 1px solid #605050;
       }
       & > button:hover {
-        cursor: pointer;
         opacity: 0.8;
       }
       & > button.input-method-selected {
@@ -124,6 +151,7 @@ form > .input-area {
   & > .text-input {
     & .inner {
       background-color: var(--input-text-area-color);
+      border: 1px solid #202020;
       padding: 0.4em;
     }
 
@@ -135,7 +163,6 @@ form > .input-area {
       text-align: left;
       background-color: transparent;
       border: none;
-      border-bottom: 0.1px solid #aaa;
     }
     & input:focus-visible {
       outline: 0.1px slid #535bf2;
@@ -159,10 +186,8 @@ form > .input-area {
   display: flex;
   flex-direction: column;
   width: 100%;
-  max-width: 900px;
   min-height: 100vh;
   margin: 0 auto;
-  padding: 14px;
 }
 
 .blocker {
@@ -181,12 +206,6 @@ form > .input-area {
   left: 0;
   z-index: 10;
   display: flex;
-}
-
-.view-area {
-  width: 100%;
-  font-size: 10px;
-  color: #ddd;
 }
 
 .validation-message {
