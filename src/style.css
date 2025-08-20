@@ -13,7 +13,11 @@
   --bg-card: rgba(255, 255, 255, 0.1);
   --bg-channel: rgba(255, 255, 255, 0.1);
   --bg-table: rgba(255, 255, 255, 0.1);
+  --h1-color: #f0f0f0;
+  --h2-color: #d0d0d0;
+  --p-sub-text-color: #d0d0d0;
   --text-color: rgba(255, 255, 255, 0.87);
+  --input-text-color: #101010;
   --text-link-color: rgba(255, 255, 255, 0.7);
   --button-color-gray: #a0a0a0;
   --input-text-area-color: #e0e0e0;
@@ -48,11 +52,25 @@ body {
 }
 
 main {
-  padding: 1em;
+  padding: 2em;
 
   & > * + * {
     margin-top: 1em;
   }
+}
+
+h1 {
+  color: var(--h1-color);
+}
+
+h2 {
+  color: var(--h2-color);
+  border-bottom: 1px solid gray;
+}
+
+h1 + p,
+h2 + p {
+  color: var(--p-sub-text-color);
 }
 
 a {
@@ -65,17 +83,15 @@ a {
   }
 }
 
-h1 {
-  font-size: 4.2em;
-  line-height: 1.1;
-  margin-bottom: 0.2em;
-}
-
 li {
   list-style: none;
 }
 
 form {
+  --font-size-field-label: 1.2em;
+  --font-size-field-hint: 0.9em;
+  --font-color-field-hint: #404040;
+
   display: flex;
   flex-direction: column;
   align-items: flex-start;
@@ -97,7 +113,7 @@ form > .input-area {
 
   border: 0.1px solid gray;
   background-color: var(--form-background-color);
-  padding: 1em;
+  padding: 1.5em 1em;
 
   & > * {
     display: flex;
@@ -115,9 +131,12 @@ form > .input-area {
       display: block;
     }
     & span.field-label {
+      font-size: var(--font-size-field-label);
       font-weight: bold;
     }
     & span.field-hint {
+      font-size: var(--font-size-field-hint);
+      color: var(--font-color-field-hint);
     }
   }
 
@@ -150,22 +169,20 @@ form > .input-area {
 
   & > .text-input {
     & .inner {
-      background-color: var(--input-text-area-color);
-      border: 1px solid #202020;
-      padding: 0.4em;
     }
 
     & input[type="text"] {
-      color: var(--text-color);
-      text-align: center;
-      max-width: 20em;
-      font-size: 1.1em;
+      display: block;
+      width: 100%;
+      background-color: var(--input-text-area-color);
+      border: 1px solid #202020;
+      padding: 0.1em;
+      color: var(--input-text-color);
+      font-size: 1.4em;
       text-align: left;
-      background-color: transparent;
-      border: none;
     }
     & input:focus-visible {
-      outline: 0.1px slid #535bf2;
+      outline: 0.1px solid #9090f2;
     }
   }
 

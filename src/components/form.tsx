@@ -34,12 +34,16 @@ export default function FormArea({ requestYouTube }) {
 
   return (
     <>
+      <div>
+        <h2>検索フォーム</h2>
+        <p>任意のYouTubeアカウントハンドルネーム（もしくはチャンネルID）を使用して、そのアカウントの詳細情報を取得・表示します。情報の取得には<a target="_blank" href="https://developers.google.com/youtube/v3/getting-started?hl=ja">YoutubeDataAPI</a>を使用しています。</p>
+      </div>
       <form>
         <div className="input-area">
           {/* チャンネル指定方法を選択ボタン */}
           <div className="button-input-methods">
             <label>
-              <span className="field-label">検索方法を選択</span>
+              <span className="field-label">検索方法の選択</span>
               <span className="field-hint">チャンネルの検索指定条件を以下のいずれかから選択する</span>
             </label>
 
@@ -65,7 +69,14 @@ export default function FormArea({ requestYouTube }) {
           <div className="text-input">
             {inputMethod === 'channelID' &&
               <div>
-                <label htmlFor="inputValueChannelID">チャンネルID</label>
+                <label>
+                  <label htmlFor="inputValueChannelID">
+                    <span className="field-label">チャンネルID</span>
+                    <span className="field-hint">
+                      一般的にUCの２文字から始まるチャンネル固有の文字列です<br />（例：UCAuUUnT6oDeKwE6v1NGQxug）
+                    </span>
+                  </label>
+                </label>
                 <div className="inner">
                   <input
                     id="inputValueChannelID"
@@ -80,7 +91,12 @@ export default function FormArea({ requestYouTube }) {
             }
             {inputMethod === 'handleName' &&
               <div>
-                <label htmlFor="inputValueHandleName">ハンドルネーム</label>
+                <label htmlFor="inputValueHandleName">
+                  <span className="field-label">ハンドルネーム</span>
+                  <span className="field-hint">
+                    @から始まるアカウント固有の文字列です（例：@TED）
+                  </span>
+                </label>
                 <div className="inner">
                   <input
                     id="inputValueHandleName"

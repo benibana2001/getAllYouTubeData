@@ -1,5 +1,7 @@
 .header {
   width: 100vw;
-  background-color: #404040;
+  background-color: #191919;
   font-weight: bold;
+  padding: 0.4em 1em;
+  color: #b0b0b0;
 }

@@ -50,7 +50,8 @@ export default function App() {
 
       <main>
         <div className="description">
-          <p>YouTube配信者のハンドルネームをもとに、チャンネルの詳細な情報を取得します。</p>
+          <h1>YouTubeチャンネル情報の取得</h1>
+          <p>getAllDataYouTubeは、YouTube配信者のハンドルネームをもとに、チャンネルの詳細な情報を取得します。</p>
         </div>
         {/* 検索フォーム */}
         {/* 通信結果がまだないときだけ表示する */}
@@ -60,10 +61,10 @@ export default function App() {
         {/* 検索結果画面 */}
         {hasStore && <Result store={store} storeclass={storeclass} setStore={setStore} />}
 
-      </main>
+      </main >
 
       <Loader isShow={loaderShow} />
-    </div>
+    </div >
   );
 };
 
