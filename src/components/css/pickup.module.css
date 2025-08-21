@@ -1,0 +1,13 @@
+@import url("../../variables.css");
+.pickup {
+  display: flex;
+  gap: 0.4em;
+  overflow-x: scroll;
+  .card {
+    min-width: 200px;
+    height: 300px;
+    background-color: var(--bgcolor-card);
+    padding: 0.6em;
+    color: var(--color-primary);
+  }
+}

@@ -3,6 +3,7 @@ import { Tooltip } from 'react-tooltip';
 import Summary from "./summary"
 import Channel from "./channle"
 import { SortOrder, SortType, Store, StoreClass, Video } from "../store";
+import Pickup from "./pickup";
 
 type SortStatus = "OFF" | "Descend" | "Ascend"
 
@@ -80,13 +81,19 @@ export default function Result({ store, storeclass, setStore }: { store: Store, 
   return (
     <div className="result">
       <div className="backToHome">
-        <button onClick={removeStore}>戻る<span>（検索結果は削除されます）</span></button>
+        <button onClick={removeStore}>戻る<span>（この画面の内容は破棄されます）</span></button>
       </div>
       <button onClick={() => { console.log(storeclass) }}>ConsoleStoreclass</button>
 
+      <h2>チャンネル概要</h2>
       <Channel channelResources={store.fetchedData.channelResources} />
       <Summary store={store} />
 
+      <h2>注目の動画</h2>
+
+      <Pickup store={store} />
+
+      <h2>公開動画一覧</h2>
       <table className="result-table">
         <thead>
           <th>公開日</th>
@@ -121,7 +128,7 @@ export default function Result({ store, storeclass, setStore }: { store: Store, 
       </table >
 
       <div className="backToHome">
-        <button onClick={removeStore}>戻る<span>（検索結果は削除されます）</span></button>
+        <button onClick={removeStore}>戻る<span>（この画面の内容は破棄されます）</span></button>
       </div>
 
       <div className="blocker" data-isshow="false">

@@ -1,37 +1,20 @@
 /* @import url("reset.css"); */
 @import url("micro-animation.css");
 @import url("form-decoration.css");
-
+@import url("variables.css");
 /***************************************************
 
                 GLOBAL
 
 ***************************************************/
-
 :root {
-  --bg-color: #242424;
-  --bg-card: rgba(255, 255, 255, 0.1);
-  --bg-channel: rgba(255, 255, 255, 0.1);
-  --bg-table: rgba(255, 255, 255, 0.1);
-  --h1-color: #f0f0f0;
-  --h2-color: #d0d0d0;
-  --p-sub-text-color: #d0d0d0;
-  --text-color: rgba(255, 255, 255, 0.87);
-  --input-text-color: #101010;
-  --text-link-color: rgba(255, 255, 255, 0.7);
-  --button-color-gray: #a0a0a0;
-  --input-text-area-color: #f0f0f0;
-
-  --border-radius-base: 0.4em;
-  --hover-opacity: 0.8;
-
   font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.5;
   font-weight: 400;
 
   color-scheme: light dark;
-  color: var(--text-color);
-  background-color: var(--bg-color);
+  color: var(--color-primary);
+  background-color: var(--bgcolor-root);
 
   font-synthesis: none;
   text-rendering: optimizeLegibility;
@@ -60,17 +43,17 @@ main {
 }
 
 h1 {
-  color: var(--h1-color);
+  color: var(--color-h1);
 }
 
 h2 {
-  color: var(--h2-color);
+  color: var(--color-h2);
   border-bottom: 1px solid gray;
 }
 
 h1 + p,
 h2 + p {
-  color: var(--p-sub-text-color);
+  color: var(--color-p-sub);
 }
 
 a {
@@ -186,10 +169,10 @@ form > .input-area {
     & input[type="text"] {
       display: block;
       width: 100%;
-      background-color: var(--input-text-area-color);
+      background-color: var(--color-input-text-area);
       border: 1px solid #202020;
       padding: 0.1em;
-      color: var(--input-text-color);
+      color: var(--color-input-text);
       font-size: 1.4em;
       text-align: left;
     }
@@ -230,7 +213,7 @@ form > .input-area {
 
 .blocker[data-isshow="true"] {
   position: fixed;
-  opacity: var(--hover-opacity);
+  opacity: var(--opacity-hover);
   top: 0;
   left: 0;
   z-index: 10;
@@ -257,10 +240,9 @@ form > .input-area {
         minmax(1rem, 2.5rem)
       );
     text-align: left;
-    background-color: var(--bg-table);
+    background-color: var(--bgcolor-table);
     padding: 0.4rem;
     font-size: 0.8rem;
-    border-radius: var(--border-radius-base);
     thead,
     tbody,
     tr {
@@ -301,7 +283,7 @@ form > .input-area {
     td {
     }
     a {
-      color: var(--text-link-color);
+      color: var(--color-link);
       &:hover {
         text-decoration: underline;
         opacity: 0.8;
@@ -336,12 +318,12 @@ form > .input-area {
   flex-direction: row-reverse;
   justify-content: flex-end;
   margin-bottom: 10px;
-  border-radius: var(--border-radius-base);
+  border-radius: var(--borderradius-primary);
   background-color: #111;
   transition: 0.1s linear all;
 
   &:hover {
-    opacity: var(--hover-opacity);
+    opacity: var(--opacity-hover);
   }
 
   & > * {
@@ -357,7 +339,7 @@ form > .input-area {
   }
 
   & > a:hover {
-    opacity: var(--hover-opacity);
+    opacity: var(--opacity-hover);
   }
 
   & > div div + div {
@@ -372,7 +354,7 @@ form > .input-area {
   margin-bottom: 0.6em;
 
   &:hover {
-    opacity: var(--hover-opacity);
+    opacity: var(--opacity-hover);
     text-decoration: underline;
   }
 }
@@ -385,26 +367,29 @@ form > .input-area {
     margin-left: 5px;
   }
 }
-.card-wrapper {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
+.summary {
+  --summary-label-color: var(--color-sub);
+  --summary-label-font-size: 1em;
+  --summary-text-color: var(--color-primary);
+  --summary-text-font-size: 1rem;
+
+  display: flex;
   gap: 0.4rem;
-}
-.card {
-  min-width: 100px;
-  padding: 1rem;
-  border-radius: var(--border-radius-base);
-  background-color: var(--bg-card);
 
-  & h3 {
-    font-size: 1em;
-    color: #999;
-  }
-
-  & > p {
-    font-size: 1rem;
-    font-weight: bold;
-    color: #eee;
+  .card {
+    min-width: 100px;
+    padding: 1rem;
+    border-radius: var(--borderradius-primary);
+    background-color: var(--bgcolor-card);
+    & h3 {
+      font-size: var(--summary-label-font-size);
+      color: var(--summary-label-color);
+    }
+    & > p {
+      font-size: var(--summary-text-font-size);
+      font-weight: bold;
+      color: var(--summary-text-color);
+    }
   }
 }
 
@@ -412,11 +397,11 @@ form > .input-area {
   display: flex;
   flex-direction: row;
   padding: 1em;
-  background-color: var(--bg-channel);
-  border-radius: var(--border-radius-base);
+  background-color: var(--bgcolor-card);
+  border-radius: var(--borderradius-primary);
 
   &:hover {
-    opacity: var(--hover-opacity);
+    opacity: var(--opacity-hover);
   }
   & div a {
     display: block;
@@ -436,7 +421,7 @@ form > .input-area {
 
 .reel {
   display: flex;
-  overflow-x: auto;
+  overflow-x: scroll;
   gap: 1em;
   scrollbar-color: #ccc #222;
 
