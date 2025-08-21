@@ -4,27 +4,16 @@ import { InputType, isInputType } from "../store"
 export default function FormArea({ requestYouTube }) {
   const [inputValue, setInputValue] = React.useState<string>("")
 
-  const [inputMethod, setInputMehod] = React.useState<InputType>('handleName')
+  const [inputRadio, setInputRadio] = React.useState<InputType>('handleName')
 
   const handleChangeTextArea = (event: React.ChangeEvent<HTMLInputElement>) => {
-    console.log(event.target.value)
     setInputValue(event.target.value)
-  }
-
-  const handleClickInputMethod = (e: React.MouseEvent<HTMLButtonElement>) => {
-    e.preventDefault();
-    console.log(e.currentTarget.value)
-    if (isInputType(e.currentTarget.value)) {
-      setInputMehod(e.currentTarget.value)
-    } else {
-      console.log('inputMethodには"channelID"か"handleName"を設定する必要がある')
-    }
   }
 
   const handleClickInputRadio = (e: React.ChangeEvent<HTMLInputElement>) => {
     console.log(e.currentTarget.value)
     if (isInputType(e.currentTarget.value)) {
-      setInputMehod(e.currentTarget.value)
+      setInputRadio(e.currentTarget.value)
     } else {
       console.log('inputMethodには"channelID"か"handleName"を設定する必要がある')
     }
@@ -32,7 +21,7 @@ export default function FormArea({ requestYouTube }) {
 
 
   const handleSubmit = () => {
-    requestYouTube(inputValue, { inputType: inputMethod })
+    requestYouTube(inputValue, { inputType: inputRadio })
   }
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
@@ -59,11 +48,11 @@ export default function FormArea({ requestYouTube }) {
                 <span>検索方法の選択</span>
               </legend>
               <div className="field-radioButton">
-                <input type="radio" name="inputMethod" id="inputMethodHandleName" value={"handleName"} onChange={handleClickInputRadio} checked={inputMethod === "handleName"} />
+                <input type="radio" name="inputMethod" id="inputMethodHandleName" value={"handleName"} onChange={handleClickInputRadio} checked={inputRadio === "handleName"} />
                 <label htmlFor="inputMethodHandleName">ハンドルネーム</label>
               </div>
               <div className="field-radioButton">
-                <input type="radio" name="inputMethod" id="inputMethodChannelID" value={"channelID"} onChange={handleClickInputRadio} checked={inputMethod === "channelID"} />
+                <input type="radio" name="inputMethod" id="inputMethodChannelID" value={"channelID"} onChange={handleClickInputRadio} checked={inputRadio === "channelID"} />
                 <label htmlFor="inputMethodChannelID">チャンネルID</label>
               </div>
 
@@ -72,7 +61,7 @@ export default function FormArea({ requestYouTube }) {
 
           {/* 文字列入力*/}
           <div className="text-input box">
-            {inputMethod === 'channelID' &&
+            {inputRadio === 'channelID' &&
               <div className="box">
                 <label>
                   <label htmlFor="inputValueChannelID">
@@ -94,7 +83,7 @@ export default function FormArea({ requestYouTube }) {
                 </div>
               </div>
             }
-            {inputMethod === 'handleName' &&
+            {inputRadio === 'handleName' &&
               <div className="box">
                 <label htmlFor="inputValueHandleName">
                   <span className="field-label">ハンドルネーム</span>

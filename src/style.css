@@ -309,7 +309,27 @@ form > .input-area {
       }
     }
   }
+
+  & .backToHome {
+    & button {
+      font-size: 1em;
+      color: #c0c0ff;
+      background: none;
+      border: 0;
+      border-bottom: 1px solid #c0c0ff;
+      &:hover {
+        opacity: 0.7;
+      }
+      &::before {
+        content: "< ";
+      }
+      & span {
+        font-size: 0.8em;
+      }
+    }
+  }
 }
+
 .list-outer {
   width: 100%;
   display: flex;

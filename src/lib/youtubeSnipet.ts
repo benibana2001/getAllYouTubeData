@@ -1,9 +1,17 @@
-import { Store, createDefaultStore, InputType, StoreFetchOptions } from "../store";
+import {
+  Store,
+  createDefaultStore,
+  InputType,
+  StoreFetchOptions,
+} from "../store";
 /**************************************************************
  *********** YouTUbeDataAPIvを使用して3storeに保存するデータをfetchする
  ***********  @returns store: Store
  *************************************************************/
-export default async function fetchAllResources(inputText: string, options: StoreFetchOptions): Promise<Store> {
+export default async function fetchAllResources(
+  inputText: string,
+  options: StoreFetchOptions,
+): Promise<Store> {
   const newStore = createDefaultStore();
   // 1. チャンネル情報を取得する TODO: name 'temp' is ambiguious
   let temp = await fetchChannelResourcesWithInputValue(inputText, options);
@@ -16,9 +24,12 @@ export default async function fetchAllResources(inputText: string, options: Stor
     newStore.fetchedData.channelResources.contentDetails.relatedPlaylists
       .uploads,
   );
-  console.log("temp")
-  console.log(newStore.fetchedData.channelResources.contentDetails.relatedPlaylists.uploads)
-  console.log(temp)
+  console.log("temp");
+  console.log(
+    newStore.fetchedData.channelResources.contentDetails.relatedPlaylists
+      .uploads,
+  );
+  console.log(temp);
 
   // 3. 全動画情報を取得する
   temp = await fetchVideoResourcesWithVideoId(temp);
@@ -30,11 +41,12 @@ export default async function fetchAllResources(inputText: string, options: Stor
  * チャンネル情報の取得
  * https://developers.google.com/youtube/v3/docs/channels?hl=ja
  */
-async function fetchChannelResourcesWithInputValue(inputValue: string, { inputType }: StoreFetchOptions) {
-
-
+async function fetchChannelResourcesWithInputValue(
+  inputValue: string,
+  { inputType }: StoreFetchOptions,
+) {
   let res;
-  if (inputType === 'channelID') {
+  if (inputType === "channelID") {
     if (!inputValue) {
       throw new Error(
         " ChannelID Is not exist. Please Input YouTube Channel ID.",
@@ -50,7 +62,7 @@ async function fetchChannelResourcesWithInputValue(inputValue: string, { inputTy
     });
   }
 
-  if (inputType === 'handleName') {
+  if (inputType === "handleName") {
     if (!inputValue) {
       throw new Error(
         " HandleName Is not exist. Please Input YouTube Channel ID.",
@@ -61,8 +73,6 @@ async function fetchChannelResourcesWithInputValue(inputValue: string, { inputTy
       forHandle: inputValue,
     });
   }
-
-
 
   if (res.status !== 200) {
     console.log(res);
@@ -136,7 +146,6 @@ async function fetchAllVideoWithPlaylistId(playlistId: string, pageToken = "") {
   if (!playlistId) {
     throw new Error("Not Exist User Video List");
   }
-  console.log(playlistId)
 
   const options = {
     part: ["snippet,contentDetails"],
@@ -147,7 +156,7 @@ async function fetchAllVideoWithPlaylistId(playlistId: string, pageToken = "") {
     options["pageToken"] = pageToken;
   }
   const res = await gapi.client.youtube.playlistItems.list(options);
-  console.log(res)
+  console.log(res);
   // 動画IDのみを切り出してarrayを作る
   const temp = res.result.items.map((item) => item.contentDetails.videoId);
   if (!res.result.nextPageToken) {
@@ -157,4 +166,3 @@ async function fetchAllVideoWithPlaylistId(playlistId: string, pageToken = "") {
     await fetchAllVideoWithPlaylistId(playlistId, res.result.nextPageToken),
   );
 }
-

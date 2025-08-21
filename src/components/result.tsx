@@ -16,7 +16,7 @@ function TableRow({ video }: { video: Video }) {
       </Tooltip>
       <th>{video.snippet.publishedAt}</th>
       <td data-tooltip-id={video.id} >
-        <a href={`https://`}>
+        <a href={`https://www.youtube.com/watch?v=${video.id}`} target="_blank">
           {video.snippet.title}
         </a>
       </td>
@@ -79,10 +79,10 @@ export default function Result({ store, storeclass, setStore }: { store: Store, 
 
   return (
     <div className="result">
-      <div>
-        <button onClick={removeStore}>ResetStore</button>
-        <button onClick={() => { console.log(storeclass) }}>ConsoleStoreclass</button>
+      <div className="backToHome">
+        <button onClick={removeStore}>戻る<span>（検索結果は削除されます）</span></button>
       </div>
+      <button onClick={() => { console.log(storeclass) }}>ConsoleStoreclass</button>
 
       <Channel channelResources={store.fetchedData.channelResources} />
       <Summary store={store} />
@@ -119,6 +119,10 @@ export default function Result({ store, storeclass, setStore }: { store: Store, 
           ))}
         </tbody>
       </table >
+
+      <div className="backToHome">
+        <button onClick={removeStore}>戻る<span>（検索結果は削除されます）</span></button>
+      </div>
 
       <div className="blocker" data-isshow="false">
         <div className="lds-ring"><div></div><div></div><div></div><div></div></div>
