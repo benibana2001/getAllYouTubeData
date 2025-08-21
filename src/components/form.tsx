@@ -21,6 +21,16 @@ export default function FormArea({ requestYouTube }) {
     }
   }
 
+  const handleClickInputRadio = (e: React.ChangeEvent<HTMLInputElement>) => {
+    console.log(e.currentTarget.value)
+    if (isInputType(e.currentTarget.value)) {
+      setInputMehod(e.currentTarget.value)
+    } else {
+      console.log('inputMethodには"channelID"か"handleName"を設定する必要がある')
+    }
+  }
+
+
   const handleSubmit = () => {
     requestYouTube(inputValue, { inputType: inputMethod })
   }
@@ -39,41 +49,36 @@ export default function FormArea({ requestYouTube }) {
         <p>任意のYouTubeアカウントハンドルネーム（もしくはチャンネルID）を使用して、そのアカウントの詳細情報を取得・表示します。情報の取得には<a target="_blank" href="https://developers.google.com/youtube/v3/getting-started?hl=ja">YoutubeDataAPI</a>を使用しています。</p>
       </div>
       <form>
+        {/* ボタン形式による検索方法選択 */}
         <div className="input-area">
-          {/* チャンネル指定方法を選択ボタン */}
-          <div className="button-input-methods">
-            <label>
-              <span className="field-label">検索方法の選択</span>
-              <span className="field-hint">チャンネルの検索指定条件を以下のいずれかから選択する</span>
-            </label>
 
-            <div className="inner">
-              <button
-                className={inputMethod === 'handleName' ? "input-method-selected" : ''}
-                onClick={handleClickInputMethod}
-                value={'handleName'}
-              >
-                ハンドルネーム
-              </button>
-              <button
-                className={inputMethod === 'channelID' ? "input-method-selected" : ''}
-                onClick={handleClickInputMethod}
-                value={'channelID'}
-              >
-                チャンネルID
-              </button>
-            </div>
+          {/* ラジオボタン形式による検索方法選択 */}
+          <div className="radio-input-methods">
+            <fieldset>
+              <legend>
+                <span>検索方法の選択</span>
+              </legend>
+              <div className="field-radioButton">
+                <input type="radio" name="inputMethod" id="inputMethodHandleName" value={"handleName"} onChange={handleClickInputRadio} checked={inputMethod === "handleName"} />
+                <label htmlFor="inputMethodHandleName">ハンドルネーム</label>
+              </div>
+              <div className="field-radioButton">
+                <input type="radio" name="inputMethod" id="inputMethodChannelID" value={"channelID"} onChange={handleClickInputRadio} checked={inputMethod === "channelID"} />
+                <label htmlFor="inputMethodChannelID">チャンネルID</label>
+              </div>
+
+            </fieldset>
           </div>
 
           {/* 文字列入力*/}
-          <div className="text-input">
+          <div className="text-input box">
             {inputMethod === 'channelID' &&
-              <div>
+              <div className="box">
                 <label>
                   <label htmlFor="inputValueChannelID">
                     <span className="field-label">チャンネルID</span>
                     <span className="field-hint">
-                      一般的にUCの２文字から始まるチャンネル固有の文字列です<br />（例：UCAuUUnT6oDeKwE6v1NGQxug）
+                      一般的にUCの２文字から始まるチャンネル固有の文字列です<br />（例：UCMDQxm7cUx3yXkfeHa5zJIQ）
                     </span>
                   </label>
                 </label>
@@ -90,11 +95,11 @@ export default function FormArea({ requestYouTube }) {
               </div>
             }
             {inputMethod === 'handleName' &&
-              <div>
+              <div className="box">
                 <label htmlFor="inputValueHandleName">
                   <span className="field-label">ハンドルネーム</span>
                   <span className="field-hint">
-                    @から始まるアカウント固有の文字列です（例：@TED）
+                    @から始まるアカウント固有の文字列です（例：@YouTubeViewers）
                   </span>
                 </label>
                 <div className="inner">
