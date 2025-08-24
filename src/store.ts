@@ -3,8 +3,8 @@ import parseFetchedData from "./parse";
 
 type ChannelID = string;
 type Video = gapi.client.youtube.Video & {
-  likePerView?: number;
-  commentPerView?: number;
+  likePerView?: string;
+  commentPerView?: string;
 };
 type Store = {
   /**
@@ -27,13 +27,14 @@ type Store = {
    */
   displayData: {
     totalVideoDuration: number;
+    totalVideoDurationString: string;
     totalVideoCount: number;
     totalLikeCount: number;
     totalCommentCount: number;
   };
 };
 
-const createDefaultStore = () => {
+const createDefaultStore = (): Store => {
   return {
     fetchedData: {
       channelResources: null,
@@ -42,6 +43,7 @@ const createDefaultStore = () => {
 
     displayData: {
       totalVideoDuration: 0,
+      totalVideoDurationString: "0秒",
       totalVideoCount: 0,
       totalLikeCount: 0,
       totalCommentCount: 0,
@@ -108,24 +110,24 @@ const compareFunc = (type: SortType, order: SortOrder) => {
     case "LikePerView": {
       if (order === "Ascend") {
         return (a: Video, b: Video) => {
-          return a.likePerView - b.likePerView;
+          return parseInt(a.likePerView) - parseInt(b.likePerView);
         };
       }
       if (order === "Descend") {
         return (a: Video, b: Video) => {
-          return -a.likePerView + b.likePerView;
+          return -parseInt(a.likePerView) + parseInt(b.likePerView);
         };
       }
     }
     case "CommentPerView": {
       if (order === "Ascend") {
         return (a: Video, b: Video) => {
-          return a.commentPerView - b.commentPerView;
+          return parseInt(a.commentPerView) - parseInt(b.commentPerView);
         };
       }
       if (order === "Descend") {
         return (a: Video, b: Video) => {
-          return -a.commentPerView + b.commentPerView;
+          return -parseInt(a.commentPerView) + parseInt(b.commentPerView);
         };
       }
     }

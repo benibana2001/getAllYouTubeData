@@ -15,7 +15,7 @@ import {
  ***************************************************
  */
 export default async function parseFetchedData(store: Store): Promise<Store> {
-  const newStore = { ...store }
+  const newStore = { ...store };
   const displayData = newStore.displayData;
   const fetchedData = newStore.fetchedData;
 
@@ -31,7 +31,7 @@ export default async function parseFetchedData(store: Store): Promise<Store> {
   );
 
   // 総合計時間を自然言語にパース
-  displayData.totalVideoDuration = replaceHMS(
+  displayData.totalVideoDurationString = replaceHMS(
     intToHmsArray(displayData.totalVideoDuration).join(""),
   );
 
@@ -40,7 +40,7 @@ export default async function parseFetchedData(store: Store): Promise<Store> {
     (accum, item) => {
       let count = 0;
       if (item.statistics?.likeCount) {
-        count = parseInt(item.statistics.likeCount)
+        count = parseInt(item.statistics.likeCount);
       }
       return accum + count;
     },
@@ -60,19 +60,40 @@ export default async function parseFetchedData(store: Store): Promise<Store> {
     0,
   );
   // 合計動画数を計算
-  displayData.totalVideoCount = fetchedData.videoResources.length
+  displayData.totalVideoCount = fetchedData.videoResources.length;
 
   // 日付フォーマットの変更
-  fetchedData.videoResources.forEach(video => {
-    video.snippet.publishedAt = format(parseISO(video.snippet.publishedAt), "yyyy年MM月dd日")
-  })
+  fetchedData.videoResources.forEach((video) => {
+    video.snippet.publishedAt = format(
+      parseISO(video.snippet.publishedAt),
+      "yyyy年MM月dd日",
+    );
+  });
+
   // 1再生数あたりのいいね数を計算
   fetchedData.videoResources.forEach((video) => {
-    video.likePerView = Math.floor(parseInt(video.statistics.likeCount) / parseInt(video.statistics.viewCount) * 10000) / 100
-    video.commentPerView = Math.floor(parseInt(video.statistics.commentCount) / parseInt(video.statistics.viewCount) * 10000) / 100
-  })
+    video.likePerView =
+      video.statistics.likeCount && video.statistics.viewCount
+        ? String(
+            Math.floor(
+              (parseInt(video.statistics.likeCount) /
+                parseInt(video.statistics.viewCount)) *
+                10000,
+            ) / 100,
+          )
+        : "-";
 
+    video.commentPerView =
+      video.statistics.commentCount && video.statistics.viewCount
+        ? String(
+            Math.floor(
+              (parseInt(video.statistics.commentCount) /
+                parseInt(video.statistics.viewCount)) *
+                10000,
+            ) / 100,
+          )
+        : "-";
+  });
 
-  return newStore
+  return newStore;
 }
-

@@ -15,15 +15,16 @@ function TableRow({ video }: { video: Video }) {
         <div>{video.id}</div>
         <div><img src={video.snippet.thumbnails.default.url} /></div>
       </Tooltip>
+
       <th>{video.snippet.publishedAt}</th>
       <td data-tooltip-id={video.id} >
         <a href={`https://www.youtube.com/watch?v=${video.id}`} target="_blank">
           {video.snippet.title}
         </a>
       </td>
-      <td>{video.statistics.viewCount}</td>
-      <td>{video.statistics.likeCount}</td>
-      <td>{video.statistics.commentCount}</td>
+      <td>{video.statistics.viewCount || "-"}</td>
+      <td>{video.statistics.likeCount || "-"}</td>
+      <td>{video.statistics.commentCount || "-"}</td>
       <td>{video.likePerView}</td>
       <td>{video.commentPerView}</td>
     </tr>
