@@ -72,16 +72,11 @@ export default async function parseFetchedData(store: Store): Promise<Store> {
 
   // 1再生数あたりのいいね数を計算
   fetchedData.videoResources.forEach((video) => {
-    video.likePerView =
-      video.statistics.likeCount && video.statistics.viewCount
-        ? String(
-            Math.floor(
-              (parseInt(video.statistics.likeCount) /
-                parseInt(video.statistics.viewCount)) *
-                10000,
-            ) / 100,
-          )
-        : "-";
+    video.likePerView = divideByString(
+      video.statistics.likeCount,
+      video.statistics.viewCount,
+      1,
+    );
 
     video.commentPerView =
       video.statistics.commentCount && video.statistics.viewCount
@@ -94,6 +89,27 @@ export default async function parseFetchedData(store: Store): Promise<Store> {
           )
         : "-";
   });
+
+  /**
+   * 文字列を数字に変換して計算
+   * a / b
+   * exp: 小数点以下の桁数を整数で指定
+   */
+  function divideByString(a: string, b: string, exp: number = 0): string {
+    if (exp < 0) throw new Error("argument is invalid");
+    const intA = parseInt(a);
+    const intB = parseInt(b);
+    /* 0除算の防止 */
+    if (!intB) return "-";
+    /* 分子が0の場合は即時リターン */
+    if (intA === 0) return "0";
+    if (!intA) return "-";
+
+    exp = 10 ** exp;
+    return (
+      String(Math.floor((parseInt(a) / parseInt(b)) * 100 * exp) / exp) + "%"
+    );
+  }
 
   return newStore;
 }
