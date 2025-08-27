@@ -110,24 +110,24 @@ const compareFunc = (type: SortType, order: SortOrder) => {
     case "LikePerView": {
       if (order === "Ascend") {
         return (a: Video, b: Video) => {
-          return parseInt(a.likePerView) - parseInt(b.likePerView);
+          return parseFloat(a.likePerView) - parseFloat(b.likePerView);
         };
       }
       if (order === "Descend") {
         return (a: Video, b: Video) => {
-          return -parseInt(a.likePerView) + parseInt(b.likePerView);
+          return -parseFloat(a.likePerView) + parseFloat(b.likePerView);
         };
       }
     }
     case "CommentPerView": {
       if (order === "Ascend") {
         return (a: Video, b: Video) => {
-          return parseInt(a.commentPerView) - parseInt(b.commentPerView);
+          return parseFloat(a.commentPerView) - parseFloat(b.commentPerView);
         };
       }
       if (order === "Descend") {
         return (a: Video, b: Video) => {
-          return -parseInt(a.commentPerView) + parseInt(b.commentPerView);
+          return -parseFloat(a.commentPerView) + parseFloat(b.commentPerView);
         };
       }
     }

@@ -78,16 +78,11 @@ export default async function parseFetchedData(store: Store): Promise<Store> {
       1,
     );
 
-    video.commentPerView =
-      video.statistics.commentCount && video.statistics.viewCount
-        ? String(
-            Math.floor(
-              (parseInt(video.statistics.commentCount) /
-                parseInt(video.statistics.viewCount)) *
-                10000,
-            ) / 100,
-          )
-        : "-";
+    video.commentPerView = divideByString(
+      video.statistics.commentCount,
+      video.statistics.viewCount,
+      2,
+    );
   });
 
   /**
